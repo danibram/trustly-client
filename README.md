@@ -47,7 +47,10 @@ Then you have a method to handle the notifications: handleNotification. Accepts 
 Also there are other functions to sign, verify the data, compose the request. Feel free to explore the code.
 
 ## Release History
-####(1.0.0 Lastest)
+####(1.0.1 Lastest)
+- Updates in packages. 
+
+####(1.0.0)
 - Firsts steps. Basic usage finishes: Deposit, refund and handleNotification functions.
 - Sign, verify and compose requests, and responses done. 
 
