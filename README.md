@@ -58,10 +58,12 @@ You should init, and it is a asyncronous process. This init loads your private a
 
 Basically you should pass, the config object composed by:
 
-- [required] privateKeyPath: Path to you private key
-- [optional] publicKeyPath: Path to a public key (for the general cases you don't need it, i package the trusty public key)
-- [required] username: Your trustly api username
-- [required] password: Your trustly api password 
+- [required] 'privateKeyPath': Path to you private key
+- [required] 'username': Your trustly api username
+- [required] 'password': Your trustly api password 
+- [optional] 'publicKeyPath': Path to a public key (for the general cases you don't need it, i package the trusty public key)
+- [optional] 'endpoint': By default it is autoselected depending of the environment, you can always send the endpoint you want.
+- [optional] 'environment': By default i fill with development
 
 The 2 basic methods are: deposit, refund. They uses the parameters described in trusty documentation.
 Then you have a method to handle the notifications: handleNotification. Accepts a Json string or a Json object, with the notification.
