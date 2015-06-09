@@ -69,6 +69,7 @@ The 2 basic methods are: deposit, refund. They uses the parameters described in 
 Then you have a method to handle the notifications: handleNotification. Accepts a Json string or a Json object, with the notification.
 
 Also there are other functions to sign, verify the data, compose the request. Feel free to explore the code.
+More information about the methods here -> <a href="https://trustly.com/en/developer/api#/introduction" title="Link to Trustly Developers Docs">Trustly Developers Docs</a>
 
 ## Release History
 ####(1.0.3 Lastest)
