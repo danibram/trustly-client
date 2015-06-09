@@ -8,10 +8,11 @@ Node.js client for trusty integrations. Right now it doesn´t includes the withd
 Install the module with: `npm install trustly-client`
 
 ```javascript
-    var tClient = require('trustly-client');
-    var tClientKP = new Client (configuration);
-   tClientKP.init()
-   .then(function (tClientKP) {
+    var client = require('trustly-client');
+    var tClientKP = client(configuration);
+    //Promise style
+    tClientKP.init()
+    .then(function () {
         return tClientKP.deposit({
             NotificationURL: 'http://127.0.0.1:4343/notification',
             EndUserID: 'john.doe@example.com',
@@ -30,7 +31,28 @@ Install the module with: `npm install trustly-client`
     .fail(function (error) {
         console.log(util.inspect(error, false, 20, true));
     });
+    //Callback style
+    tClientKP.init(function(){
+        tClientKP.deposit({
+            NotificationURL: 'http://127.0.0.1:4343/notification',
+            EndUserID: 'john.doe@example.com',
+            MessageID: '111112111221',
+            Locale: 'es_ES',
+            Amount: '1.00',
+            Currency: 'EUR',
+            SuccessURL: 'http://127.0.0.1:4343/success',
+            FailURL: 'http://127.0.0.1:4343/fail',
+            HoldNotifications: 1
+        },function(err, response){
+            if (err){
+                console.log(util.inspect(err, false, 20, true));
+            }
+            console.log(util.inspect(response, false, 20, true));
+        });
+    })
 ```
+
+You should init, and it is a asyncronous process. This init loads your private and the trustly public keys, neccesary for all the request and responses, creation and verification.
 
 ## Documentation
 
@@ -47,6 +69,10 @@ Then you have a method to handle the notifications: handleNotification. Accepts 
 Also there are other functions to sign, verify the data, compose the request. Feel free to explore the code.
 
 ## Release History
+####(1.0.2 Lastest)
+- Update the load method. 
+- Added callback example.
+
 ####(1.0.1 Lastest)
 - Updates in packages. 
 

@@ -1,10 +1,10 @@
 'use strict';
 
-var Client    = require('../lib/index.js'),
+var client    = require('../lib/index.js'),
     config    = require('./config.dist.js'),
     expect    = require('chai').expect;
 
-var tClientKP = new Client (config.keyPath);
+var tClientKP = client(config.keyPath);
 
 
 describe('Basics Encryption: Serialization and Sign', function() {

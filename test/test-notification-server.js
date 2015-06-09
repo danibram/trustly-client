@@ -5,7 +5,7 @@ var express = require("express"),
     fs = require("fs"),
     path = require("path"),
     app = express(),
-    Client    = require('../lib/index.js'),
+    client    = require('../lib/index.js'),
     config    = require('./config.js');
 
 var app = express()
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 /* serves main page */
 app.post("/notification", function(req, res) {
     console.log("- Notification is comming. √");
-    var tClient = new Client (config);
+    var tClient = client(config);
     tClient.init()
     .then(function () {
         return tClient.handleNotification(req.body);
