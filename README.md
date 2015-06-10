@@ -70,29 +70,32 @@ The module have this 3 basic methods:
 
 - **'deposit'** : Create a deposit request.
 - **'refund'** : Create a refund request.
-- **'createNotificationResponse'** : Helper that verifies the data from truistly using the keys, and returns the data you need to response to every notification as string.
+- **'createNotificationResponse'** : Helper that verifies the data from truistly using the keys, and returns the data you need to response to every notification, returns an *object*.
 
 The 2 basic methods are: **deposit**, **refund**. They uses the parameters described in trusty documentation. [here (trustly docs)](https://trustly.com/en/developer/api#/introduction)
 
-Then you have a method to handle the notifications: **'createNotificationResponse'**. Accepts a Json string or a Json with the notification, and returns you the correct data, then you simply need to send as a reponse in you notification listener. (see test/test-notification-server.js you have an example about it)
+Then you have a method to handle the notifications: **'createNotificationResponse'**. Accepts a Json string or a Json with the notification, and returns you the correct data, then you simply need to send as a reponse in you notification listener. (see **test/test-notification-server.js** you have an example about it)
 
 Also there are other functions to sign, verify the data, compose the request. Feel free to explore the code.
 
 ## Release History
-####(1.1.0 Lastest)
+####(1.1.1 Lastest)
+- Fix problems with notifications some example updates.
+
+####(1.1.0)
 - Correct notifications handling, remove "handleNotification" is replaced by "createNotificationResponse", more correct, and added an express server as example.
 
-####(1.0.4 Lastest)
+####(1.0.4)
 - Fix paths, problems with the keys.
 
-####(1.0.3 Lastest)
+####(1.0.3)
 - Update README
 
-####(1.0.2 Lastest)
+####(1.0.2)
 - Update the load method. 
 - Added callback example.
 
-####(1.0.1 Lastest)
+####(1.0.1)
 - Updates in packages. 
 
 ####(1.0.0)

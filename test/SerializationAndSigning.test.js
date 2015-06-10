@@ -4,7 +4,12 @@ var client    = require('../lib/index.js'),
     config    = require('./config.dist.js'),
     expect    = require('chai').expect;
 
-var tClientKP = client(config.keyPath);
+var tClientKP = client({
+    privateKeyPath: './test/merchant_private_key.pem',
+    publicKeyPath: './test/merchant_public_key.pem',
+    username: 'USERNAME',
+    password: 'PASSWORD'
+});
 
 
 describe('Basics Encryption: Serialization and Sign', function() {
