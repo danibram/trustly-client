@@ -78,25 +78,46 @@ Then you have a method to handle the notifications: **'createNotificationRespons
 
 Also there are other functions to sign, verify the data, compose the request. Feel free to explore the code.
 
+## Errors
+
+It will return always the same structure if an error happens:
+```javascript
+    var error = {
+        lastRequest: self._lastRequest,
+        lastResponse: self._lastResponse,
+        trustlyError: null,
+        clientError: null
+    };
+```
+Always you will have last request and response.
+If *clientError* is filled, mean all errors except trustly errors.
+If *trustlyError* is filled, it will catch all information about the trustly error in this format (Example):
+```javascript
+    trustlyError = { 
+        method: 'Deposit',
+        uuid: 'dba2d98c-6c4e-4b9e-aa46-90027793aa14',
+        message: 'ERROR_DUPLICATE_MESSAGE_ID',
+        code: 637 
+    };
+```
+*Note: method and uuid can be null if the request contains a malformed JSON*
+More information about the errors [here (trustly docs)](https://trustly.com/en/developer/api#/errormessages)
+
 ## Release History
-####(1.1.1 Lastest)
+####(1.1.2 Lastest)
+- Better management of the errors.
+
+####(1.1.1)
 - Fix problems with notifications some example updates.
 
 ####(1.1.0)
 - Correct notifications handling, remove "handleNotification" is replaced by "createNotificationResponse", more correct, and added an express server as example.
 
-####(1.0.4)
-- Fix paths, problems with the keys.
-
-####(1.0.3)
-- Update README
-
-####(1.0.2)
+####(1.0.1 - 1.0.4)
+- Updates in packages. 
 - Update the load method. 
 - Added callback example.
-
-####(1.0.1)
-- Updates in packages. 
+- Fix paths, problems with the keys.
 
 ####(1.0.0)
 - Firsts steps. Basic usage finishes: Deposit, refund and handleNotification functions.
