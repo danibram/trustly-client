@@ -1,6 +1,6 @@
 {
   "name": "trustly-client",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Trustly client for node.js integrations.",
   "main": "./lib",
   "scripts": {

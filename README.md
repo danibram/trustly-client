@@ -1,4 +1,5 @@
 # Trustly Client
+[![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/bumblebee)
 
 Node.js client for trusty integrations. Right now it doesn´t includes the withdrawal, feel free to submit a pull request. You can use callback style or promises.
 
@@ -72,6 +73,9 @@ Also there are other functions to sign, verify the data, compose the request. Fe
 More information about the methods here -> <a href="https://trustly.com/en/developer/api#/introduction" title="Link to Trustly Developers Docs">Trustly Developers Docs</a>
 
 ## Release History
+####(1.0.4 Lastest)
+- Fix paths, problems with the keys.
+
 ####(1.0.3 Lastest)
 - Update README
 
