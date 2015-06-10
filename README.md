@@ -57,7 +57,7 @@ You should init, and it is a asyncronous process. This init loads your private a
 
 ## Documentation
 
-Basically you should pass, the config object composed by:
+Basically to initialize, you should pass, the config object composed by:
 
 - [required] 'privateKeyPath': Path to you private key
 - [required] 'username': Your trustly api username
@@ -66,13 +66,22 @@ Basically you should pass, the config object composed by:
 - [optional] 'endpoint': By default it is autoselected depending of the environment, you can always send the endpoint you want.
 - [optional] 'environment': By default i fill with development
 
-The 2 basic methods are: deposit, refund. They uses the parameters described in trusty documentation.
-Then you have a method to handle the notifications: handleNotification. Accepts a Json string or a Json object, with the notification.
+The module have this 3 basic methods:
+
+- **'deposit'** : Create a deposit request.
+- **'refund'** : Create a refund request.
+- **'createNotificationResponse'** : Helper that verifies the data from truistly using the keys, and returns the data you need to response to every notification as string.
+
+The 2 basic methods are: **deposit**, **refund**. They uses the parameters described in trusty documentation. [here (trustly docs)](https://trustly.com/en/developer/api#/introduction)
+
+Then you have a method to handle the notifications: **'createNotificationResponse'**. Accepts a Json string or a Json with the notification, and returns you the correct data, then you simply need to send as a reponse in you notification listener. (see test/test-notification-server.js you have an example about it)
 
 Also there are other functions to sign, verify the data, compose the request. Feel free to explore the code.
-More information about the methods here -> <a href="https://trustly.com/en/developer/api#/introduction" title="Link to Trustly Developers Docs">Trustly Developers Docs</a>
 
 ## Release History
+####(1.1.0 Lastest)
+- Correct notifications handling, remove "handleNotification" is replaced by "createNotificationResponse", more correct, and added an express server as example.
+
 ####(1.0.4 Lastest)
 - Fix paths, problems with the keys.
 

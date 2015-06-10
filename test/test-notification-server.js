@@ -19,12 +19,11 @@ app.post("/notification", function(req, res) {
     var tClient = client(config);
     tClient.init()
     .then(function () {
-        return tClient.handleNotification(req.body);
+        return tClient.prepareNotificationResponse(req.body);
     })
     .then(function (data) {
         console.log(util.inspect(data, false,20,true));
-
-        res.send("OK");
+        res.send(data);
     })
     .fail(function (error) {
         console.log('_Error');
