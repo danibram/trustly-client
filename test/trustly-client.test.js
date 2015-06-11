@@ -6,7 +6,7 @@ var util = require('util'),
 
     var tClientKP = client(config);
 
-    tClientKP.init()
+    /*tClientKP.init()
     .then(function () {
         return tClientKP.deposit({
             NotificationURL: 'http://127.0.0.1:4343/notification',
@@ -27,6 +27,21 @@ var util = require('util'),
             //URLTarget: "0",º
             //SuggestedMinAmount: null,
             //SuggestedMaxAmount: null
+        });
+    })
+    .then(function (response) {
+        console.log(util.inspect(response, false, 20, true));
+    })
+    .fail(function (error) {
+        console.log(util.inspect(error, false, 20, true));
+    });*/
+
+    tClientKP.init()
+    .then(function () {
+        return tClientKP.refund({
+            "OrderID": '3872881618',
+            "Amount": '1.00',
+            "Currency": "EUR"
         });
     })
     .then(function (response) {

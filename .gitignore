@@ -3,3 +3,4 @@ coverage/
 *.tgz
 test/config.js
 test/privateKey.pem
+.settings
