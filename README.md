@@ -1,5 +1,5 @@
 # Trustly Client
-[![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/bumblebee)
+[![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/trustly-client)
 
 Node.js client for trusty integrations. Right now it doesn´t includes the withdrawal, feel free to submit a pull request. You can use callback style or promises.
 
@@ -61,7 +61,7 @@ Basically to initialize, you should pass, the config object composed by:
 
 - [required] 'privateKeyPath': Path to you private key
 - [required] 'username': Your trustly api username
-- [required] 'password': Your trustly api password 
+- [required] 'password': Your trustly api password
 - [optional] 'publicKeyPath': Path to a public key (for the general cases you don't need it, i package the trusty public key)
 - [optional] 'endpoint': By default it is autoselected depending of the environment, you can always send the endpoint you want.
 - [optional] 'environment': By default i fill with development
@@ -93,18 +93,22 @@ Always you will have last request and response.
 If *clientError* is filled, mean all errors except trustly errors.
 If *trustlyError* is filled, it will catch all information about the trustly error in this format (Example):
 ```javascript
-    trustlyError = { 
+    trustlyError = {
         method: 'Deposit',
         uuid: 'dba2d98c-6c4e-4b9e-aa46-90027793aa14',
         message: 'ERROR_DUPLICATE_MESSAGE_ID',
-        code: 637 
+        code: 637
     };
 ```
 *Note: method and uuid can be null if the request contains a malformed JSON*
 More information about the errors [here (trustly docs)](https://trustly.com/en/developer/api#/errormessages)
 
 ## Release History
-####(1.1.3 Lastest)
+####(1.2.0 Lastest)
+- Added charge (thanks @Iteam1337)
+- Added select account (thanks @Iteam1337)
+
+####(1.1.3)
 - Working for Deposit, Refund and management of notifications.
 - Better management of the errors.
 - Correct and fix refund.
@@ -116,14 +120,14 @@ More information about the errors [here (trustly docs)](https://trustly.com/en/d
 - Correct notifications handling, remove "handleNotification" is replaced by "createNotificationResponse", more correct, and added an express server as example.
 
 ####(1.0.1 - 1.0.4)
-- Updates in packages. 
-- Update the load method. 
+- Updates in packages.
+- Update the load method.
 - Added callback example.
 - Fix paths, problems with the keys.
 
 ####(1.0.0)
 - Firsts steps. Basic usage finishes: Deposit, refund and handleNotification functions.
-- Sign, verify and compose requests, and responses done. 
+- Sign, verify and compose requests, and responses done.
 
 ## License
 Licensed under the MIT license. 2015
