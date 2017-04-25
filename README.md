@@ -42,8 +42,7 @@ Install the module with: `npm install trustly-client`
             Amount: '1.00',
             Currency: 'EUR',
             SuccessURL: 'http://127.0.0.1:4343/success',
-            FailURL: 'http://127.0.0.1:4343/fail',
-            HoldNotifications: 1
+            FailURL: 'http://127.0.0.1:4343/fail'
         },function(err, response){
             if (err){
                 console.log(util.inspect(err, false, 20, true));
@@ -130,4 +129,4 @@ More information about the errors [here (trustly docs)](https://trustly.com/en/d
 - Sign, verify and compose requests, and responses done.
 
 ## License
-Licensed under the MIT license. 2015
+Licensed under the MIT license. 2017
