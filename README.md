@@ -1,7 +1,7 @@
 # Trustly Client
 [![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/trustly-client)
 
-Node.js client for trusty integrations. Right now it doesn´t includes the withdrawal, feel free to submit a pull request. You can use callback style or promises.
+Node.js client for trusty integrations.
 
 
 ##Getting started
@@ -103,7 +103,12 @@ If *trustlyError* is filled, it will catch all information about the trustly err
 More information about the errors [here (trustly docs)](https://trustly.com/en/developer/api#/errormessages)
 
 ## Release History
-####(1.2.0 Lastest)
+####(1.3.0 Lastest)
+- Added withdraw (thanks @rizr)
+- Added approveWithdrawal (thanks @rizr)
+- Added denyWithdrawal (thanks @rizr)
+
+####(1.2.0)
 - Added charge (thanks @Iteam1337)
 - Added select account (thanks @Iteam1337)
 
