@@ -1,4 +1,6 @@
 # Trustly Client
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/danibram/trustly-client.svg)](https://greenkeeper.io/)
 [![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/trustly-client)
 
 Node.js client for trusty integrations.
