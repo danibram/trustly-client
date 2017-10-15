@@ -6,7 +6,7 @@
 Node.js client for trusty integrations.
 
 
-##Getting started
+## Getting started
 
 Install the module with: `npm install trustly-client`
 
@@ -105,33 +105,34 @@ If *trustlyError* is filled, it will catch all information about the trustly err
 More information about the errors [here (trustly docs)](https://trustly.com/en/developer/api#/errormessages)
 
 ## Release History
-####(1.3.0 Lastest)
+
+#### (1.3.0 Lastest)
 - Added withdraw (thanks @rizr)
 - Added approveWithdrawal (thanks @rizr)
 - Added denyWithdrawal (thanks @rizr)
 
-####(1.2.0)
+#### (1.2.0)
 - Added charge (thanks @Iteam1337)
 - Added select account (thanks @Iteam1337)
 
-####(1.1.3)
+#### (1.1.3)
 - Working for Deposit, Refund and management of notifications.
 - Better management of the errors.
 - Correct and fix refund.
 
-####(1.1.1)
+#### (1.1.1)
 - Fix problems with notifications some example updates.
 
-####(1.1.0)
+#### (1.1.0)
 - Correct notifications handling, remove "handleNotification" is replaced by "createNotificationResponse", more correct, and added an express server as example.
 
-####(1.0.1 - 1.0.4)
+#### (1.0.1 - 1.0.4)
 - Updates in packages.
 - Update the load method.
 - Added callback example.
 - Fix paths, problems with the keys.
 
-####(1.0.0)
+#### (1.0.0)
 - Firsts steps. Basic usage finishes: Deposit, refund and handleNotification functions.
 - Sign, verify and compose requests, and responses done.
 
