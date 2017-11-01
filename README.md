@@ -103,7 +103,8 @@ If *trustlyError* is filled, it will catch all information about the trustly err
 More information about the errors [here (trustly docs)](https://trustly.com/en/developer/api#/errormessages)
 
 ## Release History
-####(1.3.1 Lastest)
+####(1.3.2 Lastest)
+- Updated all attributes
 - Added RequestDirectDebitMandate in deposit
 - Added withdraw (thanks @rizr)
 - Added approveWithdrawal (thanks @rizr)
