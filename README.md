@@ -105,7 +105,8 @@ If *trustlyError* is filled, it will catch all information about the trustly err
 More information about the errors [here (trustly docs)](https://trustly.com/en/developer/api#/errormessages)
 
 ## Release History
-####(1.3.4 Lastest)
+
+#### (1.3.4 Lastest)
 - Use uuid instead node-uuid
 - Updated all attributes
 - Added RequestDirectDebitMandate in deposit
