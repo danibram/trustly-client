@@ -3,7 +3,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/danibram/trustly-client.svg)](https://greenkeeper.io/)
 [![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/trustly-client)
 
-Node.js client for trusty integrations.
+Node.js client for trustly integrations.
 
 
 ## Getting started
@@ -106,9 +106,13 @@ More information about the errors [here (trustly docs)](https://trustly.com/en/d
 
 ## Release History
 
+<<<<<<< HEAD
 ####(1.3.5 Lastest)
 
 - Remaining field in charge method
+=======
+#### (1.3.4 Lastest)
+>>>>>>> 0dd2b8b2b0a8a069dc1f8a87a4274df9ff20c7ec
 - Use uuid instead node-uuid
 - Updated all attributes
 - Added RequestDirectDebitMandate in deposit
