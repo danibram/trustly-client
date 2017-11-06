@@ -106,7 +106,11 @@ More information about the errors [here (trustly docs)](https://trustly.com/en/d
 
 ## Release History
 
-####(1.3.5 Lastest)
+#### (1.3.6 Lastest)
+
+- Fix Error on serialization
+
+#### (1.3.5)
 
 - Remaining field in charge method
 - Use uuid instead node-uuid
