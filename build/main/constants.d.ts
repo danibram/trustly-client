@@ -1,42 +1,13 @@
-export declare const deposit: {
+export declare type MethodInterface = {
     method: string;
     dataFields: string[];
     attributesFields: string[];
     requiredFields: string[];
 };
-export declare const refund: {
-    method: string;
-    dataFields: string[];
-    attributesFields: never[];
-    requiredFields: string[];
-};
-export declare const selectAccount: {
-    method: string;
-    dataFields: string[];
-    attributesFields: string[];
-    requiredFields: string[];
-};
-export declare const charge: {
-    method: string;
-    dataFields: string[];
-    attributesFields: string[];
-    requiredFields: string[];
-};
-export declare const withdraw: {
-    method: string;
-    dataFields: string[];
-    attributesFields: string[];
-    requiredFields: string[];
-};
-export declare const approveWithdrawal: {
-    method: string;
-    dataFields: string[];
-    attributesFields: never[];
-    requiredFields: string[];
-};
-export declare const denyWithdrawal: {
-    method: string;
-    dataFields: string[];
-    attributesFields: never[];
-    requiredFields: string[];
-};
+export declare const deposit: MethodInterface;
+export declare const refund: MethodInterface;
+export declare const selectAccount: MethodInterface;
+export declare const charge: MethodInterface;
+export declare const withdraw: MethodInterface;
+export declare const approveWithdrawal: MethodInterface;
+export declare const denyWithdrawal: MethodInterface;

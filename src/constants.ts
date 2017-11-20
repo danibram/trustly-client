@@ -1,4 +1,11 @@
-export const deposit = {
+export type MethodInterface = {
+    method: string
+    dataFields: string[]
+    attributesFields: string[]
+    requiredFields: string[]
+}
+
+export const deposit: MethodInterface = {
     method: 'Deposit',
     dataFields: ['NotificationURL', 'EndUserID', 'MessageID'],
     attributesFields: [
@@ -39,15 +46,15 @@ export const deposit = {
     ]
 }
 
-export const refund = {
+export const refund: MethodInterface = {
     method: 'Refund',
     dataFields: ['OrderID', 'Amount', 'Currency'],
     attributesFields: [],
     requiredFields: ['OrderID', 'Amount', 'Currency']
 }
 
-export const selectAccount = {
-    //Old method?
+export const selectAccount: MethodInterface = {
+    // Old method?
     method: 'SelectAccount',
     dataFields: ['NotificationURL', 'EndUserID', 'MessageID'],
     attributesFields: [
@@ -68,7 +75,7 @@ export const selectAccount = {
     requiredFields: ['NotificationURL', 'EndUserID', 'MessageID']
 }
 
-export const charge = {
+export const charge: MethodInterface = {
     // Old?
     method: 'Charge',
     dataFields: [
@@ -89,7 +96,7 @@ export const charge = {
         'Currency'
     ]
 }
-export const withdraw = {
+export const withdraw: MethodInterface = {
     method: 'Withdraw',
     dataFields: [
         'NotificationURL',
@@ -123,7 +130,7 @@ export const withdraw = {
         'AddressLine1',
         'AddressLine2',
         'Address',
-        'ShopperStatement', //Old
+        'ShopperStatement', // Old
         'IntegrationModule' // Old
     ],
     requiredFields: [
@@ -138,14 +145,14 @@ export const withdraw = {
     ]
 }
 
-export const approveWithdrawal = {
+export const approveWithdrawal: MethodInterface = {
     method: 'ApproveWithdrawal',
     dataFields: ['OrderID'],
     attributesFields: [],
     requiredFields: ['OrderID']
 }
 
-export const denyWithdrawal = {
+export const denyWithdrawal: MethodInterface = {
     method: 'DenyWithdrawal',
     dataFields: ['OrderID'],
     attributesFields: [],

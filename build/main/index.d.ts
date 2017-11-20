@@ -1,48 +1,14 @@
 import { Client, ConfigInterface } from './lib/Client';
+import { MethodInterface } from './constants';
 export declare const TrustlyClient: typeof Client;
 export declare const constants: {
-    deposit: {
-        method: string;
-        dataFields: string[];
-        attributesFields: string[];
-        requiredFields: string[];
-    };
-    refund: {
-        method: string;
-        dataFields: string[];
-        attributesFields: never[];
-        requiredFields: string[];
-    };
-    selectAccount: {
-        method: string;
-        dataFields: string[];
-        attributesFields: string[];
-        requiredFields: string[];
-    };
-    withdraw: {
-        method: string;
-        dataFields: string[];
-        attributesFields: string[];
-        requiredFields: string[];
-    };
-    approveWithdrawal: {
-        method: string;
-        dataFields: string[];
-        attributesFields: never[];
-        requiredFields: string[];
-    };
-    denyWithdrawal: {
-        method: string;
-        dataFields: string[];
-        attributesFields: never[];
-        requiredFields: string[];
-    };
-    charge: {
-        method: string;
-        dataFields: string[];
-        attributesFields: string[];
-        requiredFields: string[];
-    };
+    deposit: MethodInterface;
+    refund: MethodInterface;
+    selectAccount: MethodInterface;
+    withdraw: MethodInterface;
+    approveWithdrawal: MethodInterface;
+    denyWithdrawal: MethodInterface;
+    charge: MethodInterface;
 };
 export declare const utils: {
     root: (...args: any[]) => string;
@@ -54,5 +20,5 @@ export declare const helpers: {
     sign: (data: any, key: any) => string;
     verify: (data: any, signature: any, key: any) => boolean;
 };
-declare const _default: (config: ConfigInterface) => Client;
-export default _default;
+export declare const client: (config: ConfigInterface) => Client;
+export default client;

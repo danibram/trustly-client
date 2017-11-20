@@ -19,8 +19,9 @@ export declare class Client {
     publicKey: string;
     _lastRequest: any;
     _lastResponse: any;
+    ready: Promise<any>;
     constructor(config: ConfigInterface);
-    init: () => Promise<Client>;
+    _init: () => Promise<any>;
     _createMethod: (specs: any) => (params: any) => Promise<any>;
     _prepareRequest(method: any, data?: {}, attributes?: any): {
         method: any;

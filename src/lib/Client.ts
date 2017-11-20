@@ -31,6 +31,8 @@ export class Client {
     _lastRequest: any
     _lastResponse: any
 
+    ready: Promise<any>
+
     constructor(config: ConfigInterface) {
 
         let isProd = config.environment && ['production', 'prod', 'p'].indexOf(config.environment) > -1
@@ -60,9 +62,11 @@ export class Client {
         this.password = config.password
         this.privateKeyPath = config.privateKeyPath
         this.privateKey = config.privateKey
+
+        this.ready = this._init()
     }
 
-    init = async (): Promise<Client> => {
+    _init = async (): Promise<any> => {
         try {
             this.publicKey = await readFile(this.publicKeyPath)
         } catch (err) {
@@ -76,14 +80,13 @@ export class Client {
                 throw `Error reading privateKey. ${err}`
             }
         }
-
-        this.keysLoaded = true
-
-        return this
     }
 
     public _createMethod = (specs) =>
         async (params) => {
+
+            await this.ready
+
             let data = {}
             let attributes = {}
             let dataFieldsArray = specs.dataFields

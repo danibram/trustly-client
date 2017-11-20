@@ -5,13 +5,13 @@ import * as fs from 'fs'
 import { Client } from '../lib/Client'
 
 test('Should init correctly', async t => {
-    let client = new Client({
-        username: 'merchant_username',
-        password: 'merchant_password',
-        privateKeyPath: path.resolve(__dirname, '..', '..', 'keys', 'test', 'merchant_private_key.pem')
-    })
-
-    t.notThrows(() => client.init())
+    t.notThrows(() =>
+        new Client({
+            username: 'merchant_username',
+            password: 'merchant_password',
+            privateKeyPath: path.resolve(__dirname, '..', '..', 'keys', 'test', 'merchant_private_key.pem')
+        })
+    )
 })
 
 test('Should have methods', async t => {
@@ -28,7 +28,6 @@ test('Should have methods', async t => {
     t.true(typeof client.createNotificationResponse === 'function')
     t.true(typeof client.prepareNotificationResponse === 'function')
     t.true(typeof client.verifyResponse === 'function')
-    t.true(typeof client.init === 'function')
 
     t.true(typeof client.withdraw === 'function')
     t.true(typeof client.deposit === 'function')
