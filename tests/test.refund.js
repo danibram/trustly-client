@@ -13,8 +13,8 @@ tClientKP
         Currency: 'EUR'
     })
     .then(function(response) {
-        console.log(util.inspect(response, false, 20, true))
+        console.log(util.inspect(response, false, 10, true))
     })
     .catch(function(error) {
-        console.log(util.inspect(error, false, 20, true))
+        console.log(util.inspect(error, false, 10, true))
     })
