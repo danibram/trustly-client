@@ -1,4 +1,5 @@
 node_modules
+tests/notification-server/node_modules
 coverage/
 *.tgz
 test/config.js
