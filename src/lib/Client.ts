@@ -221,38 +221,38 @@ export class Client {
         }
     }
 
-    _makeRequest (reqParams) {
+    _parseErr = (err) => {
+        let error = {
+            lastRequest: this._lastRequest,
+            lastResponse: this._lastResponse,
+            trustlyError: null,
+            clientError: null
+        }
+        if (err && err.error) {
+            let tError = {
+                method: (err.error.error.method)
+                    ? err.error.error.method
+                    : null,
+                uuid: err.error.error.uuid
+                    ? err.error.error.uuid
+                    : null,
+                message: err.error.message
+                    ? err.error.message
+                    : null,
+                code: err.error.code ? err.error.code : null
+            }
+
+            error.trustlyError = tError as any
+        } else {
+            error.clientError = err
+        }
+
+        throw error
+    }
+
+    _makeRequest = (reqParams) => {
         this._lastRequest = reqParams
         this._lastResponse = null
-
-        let parseErr = function(err) {
-            let error = {
-                lastRequest: this._lastRequest,
-                lastResponse: this._lastResponse,
-                trustlyError: null,
-                clientError: null
-            }
-            if (err && err.error) {
-                let tError = {
-                    method: (err.error.error.method)
-                        ? err.error.error.method
-                        : null,
-                    uuid: err.error.error.uuid
-                        ? err.error.error.uuid
-                        : null,
-                    message: err.error.message
-                        ? err.error.message
-                        : null,
-                    code: err.error.code ? err.error.code : null
-                }
-
-                error.trustlyError = tError as any
-            } else {
-                error.clientError = err
-            }
-
-            throw error
-        }
 
         return axios({
             method: 'post',
@@ -269,34 +269,20 @@ export class Client {
                     return data.result.data
                 }
                 if (data.error) {
-                    parseErr(data)
+                    this._parseErr(data)
                 }
-                parseErr('clientError: Cant parse the response, check the lastResponse.')
+                this._parseErr('clientError: Cant parse the response, check the lastResponse.')
             })
             .catch((error) => {
-                parseErr(`clientError: ${error}`)
+                this._parseErr(error)
             })
     }
 
-    deposit(data) {
-        return this._createMethod(deposit)(data)
-    }
-    refund(data) {
-        return this._createMethod(refund)(data)
-    }
-    selectAccount(data) {
-        return this._createMethod(selectAccount)(data)
-    }
-    charge(data) {
-        return this._createMethod(charge)(data)
-    }
-    withdraw(data) {
-        return this._createMethod(withdraw)(data)
-    }
-    approveWithdrawal(data) {
-        return this._createMethod(approveWithdrawal)(data)
-    }
-    denyWithdrawal(data) {
-        return this._createMethod(denyWithdrawal)(data)
-    }
+    deposit = (data) => this._createMethod(deposit)(data)
+    refund = (data) => this._createMethod(refund)(data)
+    selectAccount = (data) => this._createMethod(selectAccount)(data)
+    charge = (data) => this._createMethod(charge)(data)
+    withdraw = (data) => this._createMethod(withdraw)(data)
+    approveWithdrawal = (data) => this._createMethod(approveWithdrawal)(data)
+    denyWithdrawal = (data) => this._createMethod(denyWithdrawal)(data)
 }

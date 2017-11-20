@@ -51,12 +51,13 @@ export declare class Client {
         };
         version: string;
     };
-    _makeRequest(reqParams: any): Promise<any>;
-    deposit(data: any): Promise<any>;
-    refund(data: any): Promise<any>;
-    selectAccount(data: any): Promise<any>;
-    charge(data: any): Promise<any>;
-    withdraw(data: any): Promise<any>;
-    approveWithdrawal(data: any): Promise<any>;
-    denyWithdrawal(data: any): Promise<any>;
+    _parseErr: (err: any) => never;
+    _makeRequest: (reqParams: any) => Promise<any>;
+    deposit: (data: any) => Promise<any>;
+    refund: (data: any) => Promise<any>;
+    selectAccount: (data: any) => Promise<any>;
+    charge: (data: any) => Promise<any>;
+    withdraw: (data: any) => Promise<any>;
+    approveWithdrawal: (data: any) => Promise<any>;
+    denyWithdrawal: (data: any) => Promise<any>;
 }

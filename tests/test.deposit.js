@@ -10,7 +10,7 @@ tClientKP
     .deposit({
         NotificationURL: 'http://127.0.0.1:4343/notification',
         EndUserID: 'john.doe@example.com',
-        MessageID: '13231231434561212',
+        MessageID: new Date().valueOf().toString(),
         Locale: 'es_ES',
         Amount: '1.00',
         Currency: 'EUR',
