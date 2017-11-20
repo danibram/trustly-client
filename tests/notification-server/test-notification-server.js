@@ -12,11 +12,11 @@ app.use(bodyParser.json())
 /* serves main page */
 app.post('/notification', function(req, res) {
     console.log('- Notification is comming. √')
-    var tClient = client(
-        'Your_trustly_username',
-        'Your_trustly_password',
-        'Path/to/your/private/pem/file'
-    )
+    var tClient = client({
+        username: 'Your_trustly_username',
+        password: 'Your_trustly_password',
+        privateKeyPath: 'Path/to/your/private/pem/file'
+    })
     tClient
         .init()
         .then(function(cli) {
