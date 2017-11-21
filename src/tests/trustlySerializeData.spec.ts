@@ -24,4 +24,3 @@ test('Should be serialize data', async t => {
 
     t.deepEqual(serializationJson, serializationResult)
 })
-
