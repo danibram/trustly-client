@@ -1,4 +1,4 @@
-export const trustlySerializeData = function(data) {
+export const trustlySerializeData = function (data) {
     if (Object.prototype.toString.call(data) === '[object Object]') {
         let keys = Object.keys(data)
         let serializedData = ''

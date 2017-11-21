@@ -33,7 +33,7 @@ export class Client {
 
     ready: Promise<any>
 
-    constructor(config: ConfigInterface) {
+    constructor (config: ConfigInterface) {
 
         let isProd = config.environment && ['production', 'prod', 'p'].indexOf(config.environment) > -1
 
@@ -152,7 +152,7 @@ export class Client {
         return req
     }
 
-    verifyResponse = function(res) {
+    verifyResponse = function (res) {
         let data = serialize(res.method, res.uuid, res.data)
         let v = verify(data, res.signature, this.publicKey)
         if (!v) {
@@ -160,7 +160,7 @@ export class Client {
         }
     }
 
-    prepareNotificationResponse = function(notification) {
+    prepareNotificationResponse = function (notification) {
         let req = {
             result: {
                 signature: '',
@@ -181,7 +181,7 @@ export class Client {
         return req
     }
 
-    createNotificationResponse(notification, callback) {
+    createNotificationResponse (notification, callback) {
         let lastNotification = null
 
         try {
