@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.7"></a>
+## [1.3.7](https://github.com/danibram/trustly-client/compare/v1.3.6...v1.3.7) (2017-11-21)
+
+
+
 <a name="1.4.1"></a>
 ## [1.4.1](https://github.com/bitjson/typescript-starter/compare/v1.4.0...v1.4.1) (2017-06-27)
 
