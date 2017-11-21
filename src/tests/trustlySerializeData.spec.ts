@@ -1,4 +1,4 @@
-import { serialize, trustlySerializeData } from '../lib/trustlySerializeData'
+import { trustlySerializeData } from '../lib/trustlySerializeData'
 import { test } from 'ava'
 
 test('Should be serialize data', async t => {

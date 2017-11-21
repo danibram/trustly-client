@@ -1,5 +1,5 @@
 import { sign, verify } from '../lib/utils'
-import { serialize, trustlySerializeData } from '../lib/trustlySerializeData'
+import { serialize } from '../lib/trustlySerializeData'
 
 import { test } from 'ava'
 import * as path from 'path'
