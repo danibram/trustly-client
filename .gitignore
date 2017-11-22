@@ -1,6 +1,10 @@
 node_modules
+tests/notification-server/node_modules
 coverage/
 *.tgz
 test/config.js
 test/privateKey.pem
 .settings
+
+tests/test_keys
+tests/config.js
