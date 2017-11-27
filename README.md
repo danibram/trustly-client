@@ -1,5 +1,7 @@
 # Trustly Client
 
+## Install 1.3.6 please, i rewrite completely in 2.0.0,and there are little changes on the general behaviour of the client, im currently updating docs. Thanks!
+
 [![Greenkeeper badge](https://badges.greenkeeper.io/danibram/trustly-client.svg)](https://greenkeeper.io/)
 [![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/trustly-client)
 
