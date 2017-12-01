@@ -1,10 +1,18 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var util = require('util')
-var app = express()
-var client = require('../build/main/index.js').default
+const express = require('express')
+const bodyParser = require('body-parser')
+const util = require('util')
+const app = express()
+const client = require('../build/main/index.js').default
 
-var app = express()
+const app = express()
+
+const tClient = client({
+    username: 'Your_trustly_username',
+    password: 'Your_trustly_password',
+    privateKeyPath: 'Path/to/your/private/pem/file'
+})
+
+const port = process.env.PORT || 4343
 
 app.use(bodyParser.raw())
 app.use(bodyParser.json())
@@ -12,11 +20,6 @@ app.use(bodyParser.json())
 /* serves main page */
 app.post('/notification', function(req, res) {
     console.log('- Notification is comming. √')
-    var tClient = client({
-        username: 'Your_trustly_username',
-        password: 'Your_trustly_password',
-        privateKeyPath: 'Path/to/your/private/pem/file'
-    })
     tClient
         .prepareNotificationResponse(req.body)
         .then(function(data) {
@@ -40,7 +43,6 @@ app.get('/fail', function(req, res) {
     res.send('OK')
 })
 
-var port = process.env.PORT || 4343
 app.listen(port, function() {
     console.log('**********************************************')
     console.log('* Trustly Server Tester                      *')

@@ -1,22 +1,26 @@
 # Trustly Client
 
-## Install version 1.3.6 please, i rewrite completely in 2.0.0,and there are little changes on the general behaviour of the client, im currently updating docs. Thanks! Stay tuned
-
 [![Greenkeeper badge](https://badges.greenkeeper.io/danibram/trustly-client.svg)](https://greenkeeper.io/)
 [![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/trustly-client)
 
-Node.js client for trustly integrations.
+Node.js client for trustly integrations. Rewrite completely to Typescript and updated to use lasts libraries.
 
 
-## Getting started
+## Quickstart
+
+### Installation
 
 Install the module with: `npm install trustly-client` or `yarn add trustly-client`
 
+### Usage
+
 ```javascript
-    var client = require('trustly-client').default
-    var tClientKP = client(configuration);
-    //Promise style
-    tClientKP
+
+    // In Vanilla javascript
+    var client = require('trustly-client').default // Import it
+    var tClientKP = client(configuration);         // Fill the configuration
+
+    tClientKP                                      // Ready to use
         .deposit({
             NotificationURL: 'http://127.0.0.1:4343/notification',
             EndUserID: 'john.doe@example.com',
@@ -30,15 +34,15 @@ Install the module with: `npm install trustly-client` or `yarn add trustly-clien
         .then(function (response) {
             console.log(util.inspect(response, false, 20, true));
         })
-        .fail(function (error) {
+        .catch(function (error) {
             console.log(util.inspect(error, false, 20, true));
         });
 
     // In Typescript
-    import client from 'trustly-client'
-    let tClient = client(configuration)
+    import client from 'trustly-client'            // Import it
+    let tClient = client(configuration)            // Fill the configuration
 
-    tClientKP
+    tClientKP                                      // Ready to use
         .deposit({
             NotificationURL: 'http://127.0.0.1:4343/notification',
             EndUserID: 'john.doe@example.com',
@@ -52,14 +56,23 @@ Install the module with: `npm install trustly-client` or `yarn add trustly-clien
         .then(function (response) {
             console.log(util.inspect(response, false, 20, true));
         })
-        .fail(function (error) {
+        .catch(function (error) {
             console.log(util.inspect(error, false, 20, true));
         })
 ```
 
 ## Documentation
 
-Basically to initialize, you should pass, the config object composed by:
+### Initialization
+
+After import the library you must configure it with your data:
+
+```javascript
+    import client from 'trustly-client'            // Import it
+    let tClient = client(configuration)            // Fill the configuration
+```
+
+This configuration is an object and this is the structure:
 
 - [required] 'privateKeyPath': Path to you private key
 - [required] 'username': Your trustly api username
@@ -68,7 +81,9 @@ Basically to initialize, you should pass, the config object composed by:
 - [optional] 'endpoint': By default is selected depending of the environment between "" and "".
 - [optional] 'environment': By default is "development"
 
-The module have this 3 basic methods:
+### Usage
+
+This are the methods availables:
 
 - **'deposit'** : Create a deposit request.
 - **'refund'** : Create a refund request.
@@ -77,17 +92,21 @@ The module have this 3 basic methods:
 - **'withdraw'** : Create a refund request.
 - **'approveWithdrawal'** : Create a refund request.
 - **'denyWithdrawal'** : Create a refund request.
-- **'createNotificationResponse'** : Helper that verifies the data from truistly using the keys, and returns the data you need to response to every notification, returns an *object*.
+- **'createNotificationResponse'** : Helper that:
+    - Verify the signature and the data from trustly
+    - Compose the data you need to send to trustly to answer the notifications, it will be returned as an output fro this method
 
-The 2 basic methods are: **deposit**, **refund**. They uses the parameters described in trusty documentation. [here (trustly docs)](https://trustly.com/en/developer/api#/introduction)
+All trustly methods (deposit, refund, selectAccount, charge, withdraw, approveWithdrawal, denyWithdrawal) uses the parameters described in trusty documentation. [here (trustly docs)](https://trustly.com/en/developer/api#/introduction).
+If is something missing please make a pull request or write an issue.
 
-Then you have a method to handle the notifications: **'createNotificationResponse'**. Accepts a Json string or a Json with the notification, and returns you the correct data, then you simply need to send as a reponse in you notification listener. (see **test/test-notification-server.js** you have an example about it)
+Method **'createNotificationResponse'** accepts a Json string or a Json with the notification, and compose for you te correct response for Trustly. See **tests/notification-server/test-notification-server.js**, inside you have an already express server that you can deploy anywhere (dont forget to update with your configuration), and test the notifications.
 
-Also there are other functions to sign, verify the data, compose the request. Feel free to explore the code.
+Also it is exported helpers to sign, verify, interfaces, all configuration etc... So feel free to use it, if there is any doubt dont be shy, write an issue, a pull request or an email to me.
 
 ## Errors
 
-It will return always the same structure if an error happens:
+Managing errors is the key of a client, so for that trustly client always send the lastRequest and lastResponse (If there it be), and also i parse the most important parts for you according to the documentation, the final structure, is:
+
 ```javascript
     var error = {
         lastRequest: self._lastRequest,
@@ -96,8 +115,9 @@ It will return always the same structure if an error happens:
         clientError: null
     };
 ```
-Always you will have last request and response.
-If *clientError* is filled, mean all errors except trustly errors.
+It seems to long but sometimes you must understand the request and the response.
+
+If *clientError* is filled, means that the error not comes from trustly.
 If *trustlyError* is filled, it will catch all information about the trustly error in this format (Example):
 ```javascript
     trustlyError = {
@@ -112,58 +132,7 @@ More information about the errors [here (trustly docs)](https://trustly.com/en/d
 
 ## Release History
 
-#### (2.0.0 Beta release)
-    
-- Rewrite completely in typescript
-- Remove unused libs
-- Promise style
-- You dont need to use anymore init(), it automatically do for you
-- And more... Stay tuned
-
-#### (1.3.6 Lastest)
-
-- Fix Error on serialization
-
-#### (1.3.5)
-
-- Remaining field in charge method
-- Use uuid instead node-uuid
-- Updated all attributes
-- Added RequestDirectDebitMandate in deposit
-- Added withdraw (thanks @rizr)
-- Added approveWithdrawal (thanks @rizr)
-- Added denyWithdrawal (thanks @rizr)
-
-#### (1.2.0)
-
-- Added charge (thanks @Iteam1337)
-- Added select account (thanks @Iteam1337)
-
-#### (1.1.3)
-
-- Working for Deposit, Refund and management of notifications.
-- Better management of the errors.
-- Correct and fix refund.
-
-#### (1.1.1)
-
-- Fix problems with notifications some example updates.
-
-#### (1.1.0)
-
-- Correct notifications handling, remove "handleNotification" is replaced by "createNotificationResponse", more correct, and added an express server as example.
-
-#### (1.0.1 - 1.0.4)
-
-- Updates in packages.
-- Update the load method.
-- Added callback example.
-- Fix paths, problems with the keys.
-
-#### (1.0.0)
-
-- Firsts steps. Basic usage finishes: Deposit, refund and handleNotification functions.
-- Sign, verify and compose requests, and responses done.
+See [CHANGELOG.md](https://github.com/danibram/trustly-client/blob/master/CHANGELOG.md)
 
 ## License
 

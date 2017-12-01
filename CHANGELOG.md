@@ -2,85 +2,112 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.1"></a>
+# [2.0.1](https://github.com/danibram/trustly-client/compare/v2.0.0...v2.0.1) (2017-12-01)
+
+### Updates
+
+- Better configuration
+
+### Fixes
+
+- Fixes on examples
+- Fix on create notification response
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/danibram/trustly-client/compare/v1.3.7...v2.0.0) (2017-11-21)
 
+### Features
 
+- Rewrite completely in typescript
+- Remove unused libs
+- Promise style
+- You dont need to use anymore init(), it automatically do for you
+- And more... Stay tuned
+
+### Deprecations
+
+- No more `.init()`
+- No more callback style
 
 <a name="1.3.7"></a>
 ## [1.3.7](https://github.com/danibram/trustly-client/compare/v1.3.6...v1.3.7) (2017-11-21)
 
+### Fixes
+
+- Fix Error on serialization
 
 
-<a name="1.4.1"></a>
-## [1.4.1](https://github.com/bitjson/typescript-starter/compare/v1.4.0...v1.4.1) (2017-06-27)
-
-
-
-<a name="1.4.0"></a>
-# [1.4.0](https://github.com/bitjson/typescript-starter/compare/v1.3.0...v1.4.0) (2017-03-02)
-
+<a name="1.3.5"></a>
+## [1.3.5](https://github.com/danibram/trustly-client/compare/v1.2.0...v1.3.5) (old)
 
 ### Features
 
-* **gh-pages:** add package script for publishing docs to gh-pages ([1dfe830](https://github.com/bitjson/typescript-starter/commit/1dfe830)), closes [#14](https://github.com/bitjson/typescript-starter/issues/14)
-* **publish:** add one-step publish process ([7b9b857](https://github.com/bitjson/typescript-starter/commit/7b9b857)), closes [#15](https://github.com/bitjson/typescript-starter/issues/15)
+- Added RequestDirectDebitMandate in deposit
+- Added withdraw (thanks @rizr)
+- Added approveWithdrawal (thanks @rizr)
+- Added denyWithdrawal (thanks @rizr)
 
+### Fixes
 
-
-<a name="1.3.0"></a>
-# [1.3.0](https://github.com/bitjson/typescript-starter/compare/v1.2.2...v1.3.0) (2017-03-01)
-
-
-### Bug Fixes
-
-* **hash.js:** correctly pre-build hash.js for the browser ([1fe0b10](https://github.com/bitjson/typescript-starter/commit/1fe0b10))
-* **watch:** exclude build/**/*.spec.js from ava to avoid double execution ([e365656](https://github.com/bitjson/typescript-starter/commit/e365656))
-
-
-### Features
-
-* **browser:** add browser build, tests, and sample sha256 library method ([01f67d1](https://github.com/bitjson/typescript-starter/commit/01f67d1))
-* **watch:** use concurrently for the watch task ([7fa64b8](https://github.com/bitjson/typescript-starter/commit/7fa64b8)), closes [#11](https://github.com/bitjson/typescript-starter/issues/11)
-
-
-
-<a name="1.2.2"></a>
-## [1.2.2](https://github.com/bitjson/typescript-starter/compare/v1.2.1...v1.2.2) (2017-02-17)
-
-
-### Bug Fixes
-
-* **tsconfig:** set rootDir option when outDir option is used ([3577caa](https://github.com/bitjson/typescript-starter/commit/3577caa)), closes [#9](https://github.com/bitjson/typescript-starter/issues/9)
-
-
-
-<a name="1.2.1"></a>
-## [1.2.1](https://github.com/bitjson/typescript-starter/compare/v1.2.0...v1.2.1) (2017-02-14)
-
+- Remaining field in charge method
+- Use uuid instead node-uuid
+- Updated all attributes
 
 
 <a name="1.2.0"></a>
-# [1.2.0](https://github.com/bitjson/node-typescript-starter/compare/v1.1.1...v1.2.0) (2017-02-14)
-
+## [1.2.0](https://github.com/danibram/trustly-client/compare/v1.1.3...v1.2.0) (old)
 
 ### Features
 
-* **github:** add sample GitHub issue template, PR template, and contributing guidelines ([9c95249](https://github.com/bitjson/node-typescript-starter/commit/9c95249))
-* **watch:** add unified watch task with multiview ([973966e](https://github.com/bitjson/node-typescript-starter/commit/973966e))
+- Added charge (thanks @Iteam1337)
+- Added select account (thanks @Iteam1337)
 
+<a name="1.1.3"></a>
+## [1.1.3](https://github.com/danibram/trustly-client/compare/v1.1.1...v1.1.3) (old)
 
+### Features
+
+- Working for Deposit, Refund and management of notifications.
+
+### Fixes
+
+- Better management of the errors.
+- Correct and fix refund.
 
 <a name="1.1.1"></a>
-## [1.1.1](https://github.com/bitjson/node-typescript-starter/compare/v1.1.0...v1.1.1) (2017-02-13)
+## [1.1.1](https://github.com/danibram/trustly-client/compare/v1.1.0...v1.1.1) (old)
 
+### Fixes
 
+- Fix problems with notifications some example updates.
 
 <a name="1.1.0"></a>
-# 1.1.0 (2017-02-13)
+## [1.1.0](https://github.com/danibram/trustly-client/compare/v1.0.4...v1.1.0) (old)
 
+### Fixes
+
+- Correct notifications handling, remove "handleNotification" is replaced by "createNotificationResponse", more correct, and added an express server as example.
+
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/danibram/trustly-client/compare/v1.0.4...v1.0.4) (old)
 
 ### Features
 
-* **examples:** improve browser usage example ([c8199e7](https://github.com/bitjson/node-typescript-starter/commit/c8199e7))
-* **starter:** add changelogs and examples ([5f18048](https://github.com/bitjson/node-typescript-starter/commit/5f18048))
+- Updates in packages.
+- Update the load method.
+- Added callback example.
+- Fix paths, problems with the keys.
+
+<a name="1.0.0"></a>
+## [1.0.0]() (old)
+
+### Features
+
+- Firsts release.
+- Added Deposit
+- Added Refund
+- Added handleNotification functions.
+- Added Sign
+- Added verify
+- Added compose requests, and responses done.
