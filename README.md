@@ -99,7 +99,7 @@ This are the methods availables:
 All trustly methods (deposit, refund, selectAccount, charge, withdraw, approveWithdrawal, denyWithdrawal) uses the parameters described in trusty documentation. [here (trustly docs)](https://trustly.com/en/developer/api#/introduction).
 If is something missing please make a pull request or write an issue.
 
-Method **'createNotificationResponse'** accepts a Json string or a Json with the notification, and compose for you te correct response for Trustly. See **tests/notification-server/test-notification-server.js**, inside you have an already express server that you can deploy anywhere (dont forget to update with your configuration), and test the notifications.
+Method **'createNotificationResponse'** accepts a Json string or a Json with the notification, and compose for you te correct response for Trustly. See [tests/notification-server/test-notification-server.js](https://github.com/danibram/trustly-client/blob/master/tests/notification-server/test-notification-server.js), inside you have an already express server that you can deploy anywhere (dont forget to update with your configuration), and test the notifications.
 
 Also it is exported helpers to sign, verify, interfaces, all configuration etc... So feel free to use it, if there is any doubt dont be shy, write an issue, a pull request or an email to me.
 
