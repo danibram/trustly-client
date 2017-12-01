@@ -7,12 +7,12 @@ export declare type ConfigInterface = {
     endpoint?: string;
     publicKeyPath?: string;
 };
+export declare const parseError: (err: any, lastRequest: any, lastResponse: any) => never;
 export declare class Client {
     endpoint: string;
     environment: 'development' | 'production' | 'prod' | 'p';
     username: string;
     password: string;
-    keysLoaded: boolean;
     privateKeyPath: string | undefined;
     publicKeyPath: string;
     privateKey: string | undefined;
@@ -21,15 +21,14 @@ export declare class Client {
     _lastResponse: any;
     ready: Promise<any>;
     constructor(config: ConfigInterface);
-    _init: () => Promise<any>;
     _createMethod: (specs: any) => (params: any) => Promise<any>;
     _prepareRequest(method: any, data?: {}, attributes?: any): {
         method: any;
         params: {};
         version: string;
     };
-    verifyResponse: (res: any) => void;
-    prepareNotificationResponse: (notification: any) => {
+    _verifyResponse: (res: any) => void;
+    _prepareNotificationResponse: (notification: any) => {
         result: {
             signature: string;
             uuid: any;
@@ -40,7 +39,7 @@ export declare class Client {
         };
         version: string;
     };
-    createNotificationResponse(notification: any, callback: any): {
+    createNotificationResponse: (notification: any, callback: any) => Promise<{
         result: {
             signature: string;
             uuid: any;
@@ -50,8 +49,7 @@ export declare class Client {
             };
         };
         version: string;
-    };
-    _parseErr: (err: any) => never;
+    }>;
     _makeRequest: (reqParams: any) => Promise<any>;
     deposit: (data: any) => Promise<any>;
     refund: (data: any) => Promise<any>;
@@ -60,4 +58,5 @@ export declare class Client {
     withdraw: (data: any) => Promise<any>;
     approveWithdrawal: (data: any) => Promise<any>;
     denyWithdrawal: (data: any) => Promise<any>;
+    private _init;
 }
