@@ -1,5 +1,7 @@
 # Trustly Client
 
+## Install version 1.3.6 please, i rewrite completely in 2.0.0,and there are little changes on the general behaviour of the client, im currently updating docs. Thanks! Stay tuned
+
 [![Greenkeeper badge](https://badges.greenkeeper.io/danibram/trustly-client.svg)](https://greenkeeper.io/)
 [![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/trustly-client)
 
@@ -109,6 +111,14 @@ If *trustlyError* is filled, it will catch all information about the trustly err
 More information about the errors [here (trustly docs)](https://trustly.com/en/developer/api#/errormessages)
 
 ## Release History
+
+#### (2.0.0 Beta release)
+    
+- Rewrite completely in typescript
+- Remove unused libs
+- Promise style
+- You dont need to use anymore init(), it automatically do for you
+- And more... Stay tuned
 
 #### (1.3.6 Lastest)
 
