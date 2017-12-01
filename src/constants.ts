@@ -38,12 +38,7 @@ export const deposit: MethodInterface = {
         'QuickDeposit',
         'IntegrationModule' // Old?
     ],
-    requiredFields: [
-        'NotificationURL',
-        'EndUserID',
-        'MessageID',
-        'Currency'
-    ]
+    requiredFields: ['NotificationURL', 'EndUserID', 'MessageID', 'Currency']
 }
 
 export const refund: MethodInterface = {
@@ -98,12 +93,7 @@ export const charge: MethodInterface = {
 }
 export const withdraw: MethodInterface = {
     method: 'Withdraw',
-    dataFields: [
-        'NotificationURL',
-        'EndUserID',
-        'MessageID',
-        'Currency'
-    ],
+    dataFields: ['NotificationURL', 'EndUserID', 'MessageID', 'Currency'],
     attributesFields: [
         'Firstname',
         'Lastname',

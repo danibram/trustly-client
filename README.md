@@ -8,35 +8,14 @@ Node.js client for trustly integrations.
 
 ## Getting started
 
-Install the module with: `npm install trustly-client`
+Install the module with: `npm install trustly-client` or `yarn add trustly-client`
 
 ```javascript
-    var client = require('trustly-client');
+    var client = require('trustly-client').default
     var tClientKP = client(configuration);
     //Promise style
-    tClientKP.init()
-    .then(function () {
-        return tClientKP.deposit({
-            NotificationURL: 'http://127.0.0.1:4343/notification',
-            EndUserID: 'john.doe@example.com',
-            MessageID: '111112111221',
-            Locale: 'es_ES',
-            Amount: '1.00',
-            Currency: 'EUR',
-            SuccessURL: 'http://127.0.0.1:4343/success',
-            FailURL: 'http://127.0.0.1:4343/fail',
-            HoldNotifications: 1
-        });
-    })
-    .then(function (response) {
-        console.log(util.inspect(response, false, 20, true));
-    })
-    .fail(function (error) {
-        console.log(util.inspect(error, false, 20, true));
-    });
-    //Callback style
-    tClientKP.init(function(){
-        tClientKP.deposit({
+    tClientKP
+        .deposit({
             NotificationURL: 'http://127.0.0.1:4343/notification',
             EndUserID: 'john.doe@example.com',
             MessageID: '111112111221',
@@ -45,16 +24,36 @@ Install the module with: `npm install trustly-client`
             Currency: 'EUR',
             SuccessURL: 'http://127.0.0.1:4343/success',
             FailURL: 'http://127.0.0.1:4343/fail'
-        },function(err, response){
-            if (err){
-                console.log(util.inspect(err, false, 20, true));
-            }
+        })
+        .then(function (response) {
             console.log(util.inspect(response, false, 20, true));
+        })
+        .fail(function (error) {
+            console.log(util.inspect(error, false, 20, true));
         });
-    })
-```
 
-You should init, and it is a asyncronous process. This init loads your private and the trustly public keys, neccesary for all the request and responses, creation and verification.
+    // In Typescript
+    import client from 'trustly-client'
+    let tClient = client(configuration)
+
+    tClientKP
+        .deposit({
+            NotificationURL: 'http://127.0.0.1:4343/notification',
+            EndUserID: 'john.doe@example.com',
+            MessageID: '111112111221',
+            Locale: 'es_ES',
+            Amount: '1.00',
+            Currency: 'EUR',
+            SuccessURL: 'http://127.0.0.1:4343/success',
+            FailURL: 'http://127.0.0.1:4343/fail'
+        })
+        .then(function (response) {
+            console.log(util.inspect(response, false, 20, true));
+        })
+        .fail(function (error) {
+            console.log(util.inspect(error, false, 20, true));
+        })
+```
 
 ## Documentation
 
@@ -64,13 +63,18 @@ Basically to initialize, you should pass, the config object composed by:
 - [required] 'username': Your trustly api username
 - [required] 'password': Your trustly api password
 - [optional] 'publicKeyPath': Path to a public key (for the general cases you don't need it, i package the trusty public key)
-- [optional] 'endpoint': By default it is autoselected depending of the environment, you can always send the endpoint you want.
-- [optional] 'environment': By default i fill with development
+- [optional] 'endpoint': By default is selected depending of the environment between "" and "".
+- [optional] 'environment': By default is "development"
 
 The module have this 3 basic methods:
 
 - **'deposit'** : Create a deposit request.
 - **'refund'** : Create a refund request.
+- **'selectAccount'** : Create a refund request.
+- **'charge'** : Create a refund request.
+- **'withdraw'** : Create a refund request.
+- **'approveWithdrawal'** : Create a refund request.
+- **'denyWithdrawal'** : Create a refund request.
 - **'createNotificationResponse'** : Helper that verifies the data from truistly using the keys, and returns the data you need to response to every notification, returns an *object*.
 
 The 2 basic methods are: **deposit**, **refund**. They uses the parameters described in trusty documentation. [here (trustly docs)](https://trustly.com/en/developer/api#/introduction)

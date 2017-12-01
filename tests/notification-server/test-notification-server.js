@@ -18,10 +18,7 @@ app.post('/notification', function(req, res) {
         privateKeyPath: 'Path/to/your/private/pem/file'
     })
     tClient
-        .init()
-        .then(function(cli) {
-            return cli.prepareNotificationResponse(req.body)
-        })
+        .prepareNotificationResponse(req.body)
         .then(function(data) {
             console.log(util.inspect(data, false, 20, true))
             res.send(data)
