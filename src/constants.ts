@@ -65,7 +65,8 @@ export const selectAccount: MethodInterface = {
         'FailURL',
         'TemplateURL',
         'URLTarget',
-        'RequestDirectDebitMandate'
+        'RequestDirectDebitMandate',
+        'Email'
     ],
     requiredFields: ['NotificationURL', 'EndUserID', 'MessageID']
 }
