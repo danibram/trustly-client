@@ -16,7 +16,7 @@ export declare const utils: {
 };
 export declare const helpers: {
     serialize: (method: any, uuid: any, data: any) => any;
-    trustlySerializeData: (data: any) => any;
+    trustlySerializeData: (data: any, method?: any, uuid?: any) => any;
     sign: (data: any, key: any) => string;
     verify: (data: any, signature: any, key: any) => boolean;
 };
