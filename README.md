@@ -1,7 +1,6 @@
 # Trustly Client
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/danibram/trustly-client.svg)](https://greenkeeper.io/)
-[![Dependency Status](https://david-dm.org/danibram/trustly-client.svg)](https://david-dm.org/danibram/trustly-client)
+[![npm version](https://img.shields.io/npm/v/trustly-client.svg?style=flat-square)][npm-home-module][![GitHub license](https://img.shields.io/npm/dt/trustly-client.svg?style=flat-square)][npm-home-module][![Support link][paypal-badge]][paypal-link]
 
 Node.js client for trustly integrations. Rewrite completely to Typescript and updated to use lasts libraries.
 
@@ -159,3 +158,8 @@ See [CHANGELOG.md](https://github.com/danibram/trustly-client/blob/master/CHANGE
 ## License
 
 Licensed under the MIT license. 2017
+
+
+[npm-home-module]: https://www.npmjs.com/package/trustly-client
+[paypal-badge]: https://img.shields.io/badge/❤%20support-paypal-blue.svg?style=flat-square
+[paypal-link]: https://www.paypal.me/danibram
