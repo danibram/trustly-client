@@ -6,7 +6,7 @@ export const trustlySerializeData = function(data, method?, uuid?) {
 
         for (let i = 0; i < keys.length; i++) {
             let k = keys[i]
-            if (!data[k]) {
+            if (data[k] === undefined) {
                 throw `TrustlyClient: Method=${method} uuid=${uuid} Error serializing data, this field are "undefined". "${k}"`
             }
             if (data[k] === null || !data[k]) {
