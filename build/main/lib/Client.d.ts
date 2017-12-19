@@ -22,6 +22,7 @@ export declare class Client {
     ready: Promise<any>;
     constructor(config: ConfigInterface);
     _createMethod: (specs: any) => (params: any) => Promise<any>;
+    _createRAWMethod: () => (method: any, params: any, attributes: any) => Promise<any>;
     _prepareRequest(method: any, data?: {}, attributes?: any): {
         method: any;
         params: {};
@@ -58,6 +59,7 @@ export declare class Client {
     withdraw: (data: any) => Promise<any>;
     approveWithdrawal: (data: any) => Promise<any>;
     denyWithdrawal: (data: any) => Promise<any>;
-    credit: (data: any) => Promise<any>;
+    accountPayout: (data: any) => Promise<any>;
+    request: (method: any, params: any, attributes: any) => Promise<any>;
     private _init;
 }

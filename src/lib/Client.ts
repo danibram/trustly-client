@@ -9,7 +9,7 @@ import {
     approveWithdrawal,
     denyWithdrawal,
     charge,
-    credit
+    accountPayout
 } from '../constants'
 import { root, readFile, sign, verify } from './utils'
 import { serialize } from './trustlySerializeData'
@@ -135,6 +135,11 @@ export class Client {
 
         let req = this._prepareRequest(specs.method, data, attributes)
 
+        return this._makeRequest(req)
+    }
+
+    public _createRAWMethod = () => async (method, params, attributes) => {
+        let req = this._prepareRequest(method, params, attributes)
         return this._makeRequest(req)
     }
 
@@ -277,6 +282,9 @@ export class Client {
     withdraw = data => this._createMethod(withdraw)(data)
     approveWithdrawal = data => this._createMethod(approveWithdrawal)(data)
     denyWithdrawal = data => this._createMethod(denyWithdrawal)(data)
+    accountPayout = data => this._createMethod(accountPayout)(data)
+    request = (method, params, attributes) =>
+        this._createRAWMethod()(method, params, attributes)
 
     private _init = async (): Promise<any> => {
         try {
