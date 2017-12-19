@@ -277,7 +277,6 @@ export class Client {
     withdraw = data => this._createMethod(withdraw)(data)
     approveWithdrawal = data => this._createMethod(approveWithdrawal)(data)
     denyWithdrawal = data => this._createMethod(denyWithdrawal)(data)
-    credit = data => this._createMethod(credit)(data)
 
     private _init = async (): Promise<any> => {
         try {
