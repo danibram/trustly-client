@@ -42,19 +42,18 @@ export const deposit: MethodInterface = {
 }
 
 export const credit: MethodInterface = {
-    method: 'credit',
+    method: 'Credit',
     dataFields: [
-        'Amount',
-        'Currency',
-        'AccountID',
-        'NotificationID',
-        'EndUserID',
-        'MessageID',
-        'Timestamp',
-        'OrderID'
+        'amount',
+        'currency',
+        'notificationid',
+        'enduserid',
+        'messageid',
+        'timestamp',
+        'orderid'
     ],
     attributesFields: [],
-    requiredFields: ['OrderID', 'Amount', 'Currency']
+    requiredFields: ['orderid', 'amount', 'currency']
 }
 
 export const refund: MethodInterface = {
