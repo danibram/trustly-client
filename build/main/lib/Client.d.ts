@@ -58,5 +58,6 @@ export declare class Client {
     withdraw: (data: any) => Promise<any>;
     approveWithdrawal: (data: any) => Promise<any>;
     denyWithdrawal: (data: any) => Promise<any>;
+    credit: (data: any) => Promise<any>;
     private _init;
 }

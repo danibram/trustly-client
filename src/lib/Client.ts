@@ -8,7 +8,8 @@ import {
     withdraw,
     approveWithdrawal,
     denyWithdrawal,
-    charge
+    charge,
+    credit
 } from '../constants'
 import { root, readFile, sign, verify } from './utils'
 import { serialize } from './trustlySerializeData'
@@ -64,7 +65,7 @@ export class Client {
 
     ready: Promise<any>
 
-    constructor (config: ConfigInterface) {
+    constructor(config: ConfigInterface) {
         let isProd =
             config.environment &&
             ['production', 'prod', 'p'].indexOf(config.environment) > -1
@@ -137,7 +138,7 @@ export class Client {
         return this._makeRequest(req)
     }
 
-    _prepareRequest (method, data = {}, attributes?) {
+    _prepareRequest(method, data = {}, attributes?) {
         let req = {
             method,
             params: {},
@@ -161,7 +162,7 @@ export class Client {
         return req
     }
 
-    _verifyResponse = function (res) {
+    _verifyResponse = function(res) {
         let data = serialize(res.method, res.uuid, res.data)
         let v = verify(data, res.signature, this.publicKey)
         if (!v) {
@@ -169,7 +170,7 @@ export class Client {
         }
     }
 
-    _prepareNotificationResponse = function (notification) {
+    _prepareNotificationResponse = function(notification) {
         let req = {
             result: {
                 signature: '',
@@ -183,7 +184,11 @@ export class Client {
         }
 
         req.result.signature = sign(
-            serialize(notification.method, notification.params.uuid, req.result.data),
+            serialize(
+                notification.method,
+                notification.params.uuid,
+                req.result.data
+            ),
             this.privateKey
         )
 
@@ -212,7 +217,11 @@ export class Client {
                 notification.params.data
             )
 
-            let v = verify(dataToVerify, notification.params.signature, this.publicKey)
+            let v = verify(
+                dataToVerify,
+                notification.params.signature,
+                this.publicKey
+            )
 
             if (!v) {
                 throw new Error('Cant verify the response.')
@@ -247,7 +256,11 @@ export class Client {
                 }
 
                 if (data.error) {
-                    return parseError(data, this._lastRequest, this._lastResponse)
+                    return parseError(
+                        data,
+                        this._lastRequest,
+                        this._lastResponse
+                    )
                 }
 
                 throw 'Cant parse the response, check the lastResponse.'
@@ -264,6 +277,7 @@ export class Client {
     withdraw = data => this._createMethod(withdraw)(data)
     approveWithdrawal = data => this._createMethod(approveWithdrawal)(data)
     denyWithdrawal = data => this._createMethod(denyWithdrawal)(data)
+    credit = data => this._createMethod(credit)(data)
 
     private _init = async (): Promise<any> => {
         try {

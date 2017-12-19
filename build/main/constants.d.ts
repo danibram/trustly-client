@@ -5,6 +5,7 @@ export declare type MethodInterface = {
     requiredFields: string[];
 };
 export declare const deposit: MethodInterface;
+export declare const credit: MethodInterface;
 export declare const refund: MethodInterface;
 export declare const selectAccount: MethodInterface;
 export declare const charge: MethodInterface;
