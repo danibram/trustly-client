@@ -47,7 +47,23 @@ export const refund: MethodInterface = {
     attributesFields: [],
     requiredFields: ['OrderID', 'Amount', 'Currency']
 }
-
+export const accountPayout: MethodInterface = {
+    method: 'AccountPayout',
+    dataFields: ['NotificationURL', 
+                 'AccountID', 
+                 'EndUserID',
+                 'MessageID',
+                 'Amount',
+                 'Currency'
+                ],
+    attributesFields: [],
+    requiredFields: ['NotificationURL', 
+                 'AccountID', 
+                 'EndUserID',
+                 'MessageID',
+                 'Amount',
+                 'Currency']
+}
 export const selectAccount: MethodInterface = {
     // Old method?
     method: 'SelectAccount',
