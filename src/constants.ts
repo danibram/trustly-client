@@ -50,7 +50,8 @@ export const credit: MethodInterface = {
         'NotificationID',
         'EndUserID',
         'MessageID',
-        'Timestamp'
+        'Timestamp',
+        'OrderID'
     ],
     attributesFields: [],
     requiredFields: ['OrderID', 'Amount', 'Currency']
