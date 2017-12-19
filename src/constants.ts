@@ -42,7 +42,7 @@ export const deposit: MethodInterface = {
 }
 
 export const credit: MethodInterface = {
-    method: 'Credit',
+    method: 'credit',
     dataFields: [
         'amount',
         'currency',
