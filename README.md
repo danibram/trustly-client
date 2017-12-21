@@ -91,12 +91,13 @@ This are the methods availables:
 
 * **'deposit'** : Create a deposit request.
 * **'refund'** : Create a refund request.
-* **'selectAccount'** : Create a selectAccount request.
+* **'selectAccount'** : Create a select account request.
 * **'charge'** : Create a charge request.
 * **'withdraw'** : Create a withdraw request.
-* **'approveWithdrawal'** : Create a approveWithdrawal request.
-* **'denyWithdrawal'** : Create a denyWithdrawal request.
-* **'credit'** : Create a credit request.
+* **'approveWithdrawal'** : Create a approve withdrawal request.
+* **'denyWithdrawal'** : Create a deny withdrawal request.
+* **'accountPayout'** : Create a account payout request.
+* **'requestMethod'** : This creates a free request to trustly, use only for testing propouses, this method haven´t validation on the input, you have to pass this parameters **(method, params, attributes)**, and it compose and sign the trustly structure.
 * **'createNotificationResponse'** : Helper that: - Verify the signature and the data from trustly - Compose the data you need to send to trustly to answer the notifications, it will be returned as an output from this method. The output should be like:
 
       ```
