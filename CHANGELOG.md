@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/danibram/trustly-client/compare/v2.1.0...v3.0.0) (2018-02-05)
+
+
+### Bug Fixes
+
+* Modified README to 3.0.0 ([4a7c2b5](https://github.com/danibram/trustly-client/commit/4a7c2b5))
+
+
+### Features
+
+* **chore:** make better interfaces and specs ([3dbacf0](https://github.com/danibram/trustly-client/commit/3dbacf0))
+* **chore:** remove validations, and clean up some code ([e1cded1](https://github.com/danibram/trustly-client/commit/e1cded1))
+
+
+
 <a name="2.0.7"></a>
 
 # [2.0.7](https://github.com/danibram/trustly-client/compare/v2.0.5...v2.0.7) (2017-12-19)
