@@ -12,6 +12,8 @@ Install the module with: `npm install trustly-client` or `yarn add trustly-clien
 
 ### Usage
 
+In versions **>3.0.0** all validations are removed and you are free to pass every parameter you like. For older changelog go to the tags **<3.0.0**
+
 ```javascript
 // In Vanilla javascript
 var client = require('trustly-client').default // Import it
@@ -21,7 +23,8 @@ tClientKP // Ready to use
     .deposit({
         NotificationURL: 'http://127.0.0.1:4343/notification',
         EndUserID: 'john.doe@example.com',
-        MessageID: '111112111221',
+        MessageID: '111112111221'
+    },{
         Locale: 'es_ES',
         Amount: '1.00',
         Currency: 'EUR',
@@ -43,7 +46,8 @@ tClientKP // Ready to use
     .deposit({
         NotificationURL: 'http://127.0.0.1:4343/notification',
         EndUserID: 'john.doe@example.com',
-        MessageID: '111112111221',
+        MessageID: '111112111221'
+    },{
         Locale: 'es_ES',
         Amount: '1.00',
         Currency: 'EUR',
@@ -87,7 +91,7 @@ This configuration is an object and this is the structure:
 
 ### Usage
 
-This are the methods availables:
+This are the methods availables, every method accepts `data` and `params` and are the same that you have to send to trustly.
 
 * **'deposit'** : Create a deposit request.
 * **'refund'** : Create a refund request.
@@ -97,7 +101,8 @@ This are the methods availables:
 * **'approveWithdrawal'** : Create a approve withdrawal request.
 * **'denyWithdrawal'** : Create a deny withdrawal request.
 * **'accountPayout'** : Create a account payout request.
-* **'requestMethod'** : This creates a free request to trustly, use only for testing propouses, this method haven´t validation on the input, you have to pass this parameters **(method, params, attributes)**, and it compose and sign the trustly structure.
+
+* **'request'** : This creates a free request to trustly, use only for testing propouses, you have to pass this parameters `(method, params, attributes)`, and it compose and sign the trustly structure.
 * **'createNotificationResponse'** : Helper that: - Verify the signature and the data from trustly - Compose the data you need to send to trustly to answer the notifications, it will be returned as an output from this method. The output should be like:
 
       ```
