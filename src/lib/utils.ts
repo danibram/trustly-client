@@ -4,7 +4,7 @@ import * as crypto from 'crypto'
 
 // Path helpers
 export const readFile = (path: string): Promise<string> =>
-    new Promise ((resolve, reject) =>
+    new Promise((resolve, reject) =>
         fs.readFile(path, 'utf8', function (err, data) {
             if (err) return reject(err)
 
@@ -29,4 +29,28 @@ export const verify = function (data, signature, key) {
     verifier.update(data, 'utf8')
 
     return verifier.verify(key, signature, 'base64')
+}
+
+export const parseError = (err, lastRequest, lastResponse) => {
+    let error = {
+        lastRequest: lastRequest,
+        lastResponse: lastResponse,
+        trustlyError: null,
+        clientError: null
+    }
+
+    if (err && err.error) {
+        let tError = {
+            method: err.error.error.method ? err.error.error.method : null,
+            uuid: err.error.error.uuid ? err.error.error.uuid : null,
+            message: err.error.message ? err.error.message : null,
+            code: err.error.code ? err.error.code : null
+        }
+
+        error.trustlyError = tError as any
+    } else {
+        error.clientError = err
+    }
+
+    throw error
 }

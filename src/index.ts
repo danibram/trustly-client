@@ -1,6 +1,7 @@
-import { Client, ConfigInterface } from './lib/Client'
+import { Client } from './lib/Client'
 
-import { deposit, refund, selectAccount, withdraw, approveWithdrawal, denyWithdrawal, charge, MethodInterface } from './constants'
+import { deposit, refund, selectAccount, withdraw, approveWithdrawal, denyWithdrawal, charge } from './specs'
+import { ConfigInterface, MethodInterface } from './Interfaces'
 import { root, readFile, sign, verify } from './lib/utils'
 import { serialize, trustlySerializeData } from './lib/trustlySerializeData'
 

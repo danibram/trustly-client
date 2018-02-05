@@ -1,4 +1,4 @@
-export const trustlySerializeData = function(data, method?, uuid?) {
+export const trustlySerializeData = function (data, method?, uuid?) {
     if (Object.prototype.toString.call(data) === '[object Object]') {
         let keys = Object.keys(data)
         let serializedData = ''
@@ -24,6 +24,6 @@ export const trustlySerializeData = function(data, method?, uuid?) {
     }
 }
 
-export const serialize = function(method, uuid, data) {
+export const serialize = function (method, uuid, data) {
     return method + uuid + trustlySerializeData(data, method, uuid)
 }

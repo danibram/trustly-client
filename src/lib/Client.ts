@@ -10,43 +10,10 @@ import {
     denyWithdrawal,
     charge,
     accountPayout
-} from '../constants'
-import { root, readFile, sign, verify } from './utils'
+} from '../specs'
+import { root, readFile, sign, verify, parseError } from './utils'
 import { serialize } from './trustlySerializeData'
-
-export type ConfigInterface = {
-    username: string
-    password: string
-    privateKeyPath?: string
-    privateKey?: string
-    environment?: string
-    endpoint?: string
-    publicKeyPath?: string
-}
-
-export const parseError = (err, lastRequest, lastResponse) => {
-    let error = {
-        lastRequest: lastRequest,
-        lastResponse: lastResponse,
-        trustlyError: null,
-        clientError: null
-    }
-
-    if (err && err.error) {
-        let tError = {
-            method: err.error.error.method ? err.error.error.method : null,
-            uuid: err.error.error.uuid ? err.error.error.uuid : null,
-            message: err.error.message ? err.error.message : null,
-            code: err.error.code ? err.error.code : null
-        }
-
-        error.trustlyError = tError as any
-    } else {
-        error.clientError = err
-    }
-
-    throw error
-}
+import { ConfigInterface } from '../Interfaces'
 
 export class Client {
     endpoint: string = 'https://test.trustly.com/api/1'
@@ -73,8 +40,8 @@ export class Client {
         this.publicKeyPath = config.publicKeyPath
             ? config.publicKeyPath
             : isProd
-              ? root('keys', 'trustly.com.public.pem')
-              : root('keys', 'test.trustly.com.public.pem')
+                ? root('keys', 'trustly.com.public.pem')
+                : root('keys', 'test.trustly.com.public.pem')
 
         this.endpoint = isProd
             ? 'https://trustly.com/api/1'
@@ -101,44 +68,8 @@ export class Client {
         this.ready = this._init()
     }
 
-    public _createMethod = specs => async params => {
+    public _createMethod = method => async (params, attributes) => {
         await this.ready
-
-        let data = {}
-        let attributes = {}
-        let dataFieldsArray = specs.dataFields
-        let attributesFieldsArray = specs.attributesFields
-        let requiredFields = specs.requiredFields
-
-        let keys = Object.keys(params)
-        let requiredParams = 0
-
-        for (let i = 0; i < keys.length; i++) {
-            let ky = keys[i]
-
-            if (requiredFields.indexOf(ky) > -1) {
-                requiredParams++
-            }
-            if (dataFieldsArray.indexOf(ky) > -1) {
-                data[ky] = params[ky]
-            }
-            if (attributesFieldsArray.indexOf(ky) > -1) {
-                attributes[ky] = params[ky]
-            }
-        }
-
-        if (requiredParams < requiredFields.length) {
-            throw new Error(
-                `You dont send all required params. [${requiredFields.toString()}]`
-            )
-        }
-
-        let req = this._prepareRequest(specs.method, data, attributes)
-
-        return this._makeRequest(req)
-    }
-
-    public _createRAWMethod = () => async (method, params, attributes) => {
         let req = this._prepareRequest(method, params, attributes)
         return this._makeRequest(req)
     }
@@ -167,7 +98,7 @@ export class Client {
         return req
     }
 
-    _verifyResponse = function(res) {
+    _verifyResponse = function (res) {
         let data = serialize(res.method, res.uuid, res.data)
         let v = verify(data, res.signature, this.publicKey)
         if (!v) {
@@ -175,7 +106,7 @@ export class Client {
         }
     }
 
-    _prepareNotificationResponse = function(notification) {
+    _prepareNotificationResponse = function (notification) {
         let req = {
             result: {
                 signature: '',
@@ -275,16 +206,16 @@ export class Client {
             })
     }
 
-    deposit = data => this._createMethod(deposit)(data)
-    refund = data => this._createMethod(refund)(data)
-    selectAccount = data => this._createMethod(selectAccount)(data)
-    charge = data => this._createMethod(charge)(data)
-    withdraw = data => this._createMethod(withdraw)(data)
-    approveWithdrawal = data => this._createMethod(approveWithdrawal)(data)
-    denyWithdrawal = data => this._createMethod(denyWithdrawal)(data)
-    accountPayout = data => this._createMethod(accountPayout)(data)
-    request = (method, params, attributes) =>
-        this._createRAWMethod()(method, params, attributes)
+    deposit = (data, attributes?) => this._createMethod(deposit.method)(data, attributes)
+    refund = (data, attributes?) => this._createMethod(refund.method)(data, attributes)
+    selectAccount = (data, attributes?) => this._createMethod(selectAccount.method)(data, attributes)
+    charge = (data, attributes?) => this._createMethod(charge.method)(data, attributes)
+    withdraw = (data, attributes?) => this._createMethod(withdraw.method)(data, attributes)
+    approveWithdrawal = (data, attributes?) => this._createMethod(approveWithdrawal.method)(data, attributes)
+    denyWithdrawal = (data, attributes?) => this._createMethod(denyWithdrawal.method)(data, attributes)
+    accountPayout = (data, attributes?) => this._createMethod(accountPayout.method)(data, attributes)
+    request = (method, params, attributes?) =>
+        this._createMethod(method)(params, attributes)
 
     private _init = async (): Promise<any> => {
         try {

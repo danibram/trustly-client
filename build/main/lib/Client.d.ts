@@ -1,13 +1,4 @@
-export declare type ConfigInterface = {
-    username: string;
-    password: string;
-    privateKeyPath?: string;
-    privateKey?: string;
-    environment?: string;
-    endpoint?: string;
-    publicKeyPath?: string;
-};
-export declare const parseError: (err: any, lastRequest: any, lastResponse: any) => never;
+import { ConfigInterface } from '../Interfaces';
 export declare class Client {
     endpoint: string;
     environment: 'development' | 'production' | 'prod' | 'p';
@@ -21,8 +12,7 @@ export declare class Client {
     _lastResponse: any;
     ready: Promise<any>;
     constructor(config: ConfigInterface);
-    _createMethod: (specs: any) => (params: any) => Promise<any>;
-    _createRAWMethod: () => (method: any, params: any, attributes: any) => Promise<any>;
+    _createMethod: (method: any) => (params: any, attributes: any) => Promise<any>;
     _prepareRequest(method: any, data?: {}, attributes?: any): {
         method: any;
         params: {};
@@ -52,14 +42,14 @@ export declare class Client {
         version: string;
     }>;
     _makeRequest: (reqParams: any) => Promise<any>;
-    deposit: (data: any) => Promise<any>;
-    refund: (data: any) => Promise<any>;
-    selectAccount: (data: any) => Promise<any>;
-    charge: (data: any) => Promise<any>;
-    withdraw: (data: any) => Promise<any>;
-    approveWithdrawal: (data: any) => Promise<any>;
-    denyWithdrawal: (data: any) => Promise<any>;
-    accountPayout: (data: any) => Promise<any>;
-    request: (method: any, params: any, attributes: any) => Promise<any>;
+    deposit: (data: any, attributes?: any) => Promise<any>;
+    refund: (data: any, attributes?: any) => Promise<any>;
+    selectAccount: (data: any, attributes?: any) => Promise<any>;
+    charge: (data: any, attributes?: any) => Promise<any>;
+    withdraw: (data: any, attributes?: any) => Promise<any>;
+    approveWithdrawal: (data: any, attributes?: any) => Promise<any>;
+    denyWithdrawal: (data: any, attributes?: any) => Promise<any>;
+    accountPayout: (data: any, attributes?: any) => Promise<any>;
+    request: (method: any, params: any, attributes?: any) => Promise<any>;
     private _init;
 }

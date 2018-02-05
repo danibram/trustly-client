@@ -1,5 +1,5 @@
-import { Client, ConfigInterface } from './lib/Client';
-import { MethodInterface } from './constants';
+import { Client } from './lib/Client';
+import { ConfigInterface, MethodInterface } from './Interfaces';
 export declare const TrustlyClient: typeof Client;
 export declare const constants: {
     deposit: MethodInterface;

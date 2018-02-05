@@ -1,9 +1,4 @@
-export declare type MethodInterface = {
-    method: string;
-    dataFields: string[];
-    attributesFields: string[];
-    requiredFields: string[];
-};
+import { MethodInterface } from './Interfaces';
 export declare const deposit: MethodInterface;
 export declare const refund: MethodInterface;
 export declare const accountPayout: MethodInterface;

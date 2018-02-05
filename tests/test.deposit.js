@@ -11,6 +11,7 @@ tClientKP
         NotificationURL: 'http://127.0.0.1:4343/notification',
         EndUserID: 'john.doe@example.com',
         MessageID: new Date().valueOf().toString(),
+    }, {
         Locale: 'es_ES',
         Amount: '1.00',
         Currency: 'EUR',
@@ -27,9 +28,9 @@ tClientKP
         //SuggestedMinAmount: null,
         //SuggestedMaxAmount: null
     })
-    .then(function(response) {
+    .then(function (response) {
         console.log(util.inspect(response, false, 20, true))
     })
-    .catch(function(error) {
+    .catch(function (error) {
         console.log(util.inspect(error, false, 20, true))
     })

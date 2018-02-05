@@ -8,13 +8,13 @@ var tClientKP = client(config)
 
 tClientKP
     .refund({
-        OrderID: '3872881618',
+        OrderID: '3480004818',
         Amount: '1.00',
         Currency: 'EUR'
     })
-    .then(function(response) {
+    .then(function (response) {
         console.log(util.inspect(response, false, 10, true))
     })
-    .catch(function(error) {
+    .catch(function (error) {
         console.log(util.inspect(error, false, 10, true))
     })
