@@ -9,7 +9,8 @@ import {
     approveWithdrawal,
     denyWithdrawal,
     charge,
-    accountPayout
+    accountPayout,
+    balance
 } from '../specs'
 import { root, readFile, sign, verify, parseError } from './utils'
 import { serialize } from './trustlySerializeData'
@@ -214,6 +215,7 @@ export class Client {
     approveWithdrawal = (data, attributes?) => this._createMethod(approveWithdrawal.method)(data, attributes)
     denyWithdrawal = (data, attributes?) => this._createMethod(denyWithdrawal.method)(data, attributes)
     accountPayout = (data, attributes?) => this._createMethod(accountPayout.method)(data, attributes)
+    balance = (data, attributes?) => this._createMethod(balance.method)(data, attributes)
     request = (method, params, attributes?) =>
         this._createMethod(method)(params, attributes)
 

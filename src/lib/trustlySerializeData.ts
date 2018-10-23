@@ -1,5 +1,9 @@
 export const trustlySerializeData = function (data, method?, uuid?) {
-    if (Object.prototype.toString.call(data) === '[object Object]') {
+    const dataType = Object.prototype.toString.call(data);
+    const isObj = dataType === '[object Object]';
+    const isArr = dataType === '[object Array]';
+
+    if (isObj || isArr) {
         let keys = Object.keys(data)
         let serializedData = ''
         keys.sort()
@@ -14,7 +18,7 @@ export const trustlySerializeData = function (data, method?, uuid?) {
             } else {
                 serializedData =
                     serializedData +
-                    k +
+                    (!isArr ? k : '') +
                     trustlySerializeData(data[k], method, uuid)
             }
         }
