@@ -164,3 +164,10 @@ export const denyWithdrawal: MethodInterface = {
     attributesFields: [],
     requiredFields: ['OrderID']
 }
+
+export const balance: MethodInterface = {
+    method: 'Balance',
+    dataFields: [], // TODO: The response will be an array
+    attributesFields: [],
+    requiredFields: []
+}

@@ -7,3 +7,4 @@ export declare const charge: MethodInterface;
 export declare const withdraw: MethodInterface;
 export declare const approveWithdrawal: MethodInterface;
 export declare const denyWithdrawal: MethodInterface;
+export declare const balance: MethodInterface;
