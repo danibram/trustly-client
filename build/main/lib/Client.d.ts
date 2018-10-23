@@ -50,6 +50,7 @@ export declare class Client {
     approveWithdrawal: (data: any, attributes?: any) => Promise<any>;
     denyWithdrawal: (data: any, attributes?: any) => Promise<any>;
     accountPayout: (data: any, attributes?: any) => Promise<any>;
+    balance: (data: any, attributes?: any) => Promise<any>;
     request: (method: any, params: any, attributes?: any) => Promise<any>;
     private _init;
 }
