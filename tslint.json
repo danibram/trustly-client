@@ -1,6 +1,13 @@
 {
-    "extends": ["tslint:latest", "tslint-config-prettier"],
+    "extends": "tslint-config-prettier",
+    "rules": {
+        "indent": [true, "spaces", 4],
+        "no-eval": false,
+        "no-empty": false,
+        "no-string-throw": false,
+        "space-before-function-parent": false
+    },
     "linterOptions": {
-        "exclude": ["src/lib/tests", "src/*.spec.ts"]
+        "exclude": ["src/lib/tests", "src/*.spec.ts", "config/**/*.js", "node_modules/**/*.ts"]
     }
 }
