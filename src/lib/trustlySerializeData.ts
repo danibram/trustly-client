@@ -1,7 +1,7 @@
-export const trustlySerializeData = function (data, method?, uuid?) {
-    const dataType = Object.prototype.toString.call(data);
-    const isObj = dataType === '[object Object]';
-    const isArr = dataType === '[object Array]';
+export const trustlySerializeData = function(data, method?, uuid?) {
+    const dataType = Object.prototype.toString.call(data)
+    const isObj = dataType === '[object Object]'
+    const isArr = dataType === '[object Array]'
 
     if (isObj || isArr) {
         let keys = Object.keys(data)
@@ -28,6 +28,6 @@ export const trustlySerializeData = function (data, method?, uuid?) {
     }
 }
 
-export const serialize = function (method, uuid, data) {
+export const serialize = function(method, uuid, data) {
     return method + uuid + trustlySerializeData(data, method, uuid)
 }
