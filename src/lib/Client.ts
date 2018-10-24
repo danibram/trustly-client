@@ -1,20 +1,10 @@
-import axios from 'axios'
+import axios from 'axios';
+import { ConfigInterface } from '../Interfaces';
+import { accountPayout, approveWithdrawal, balance, charge, denyWithdrawal, deposit, refund, selectAccount, withdraw } from '../specs';
+import { serialize } from './trustlySerializeData';
+import { parseError, readFile, root, sign, verify } from './utils';
 const uuidv4 = require('uuid/v4')
 
-import {
-    deposit,
-    refund,
-    selectAccount,
-    withdraw,
-    approveWithdrawal,
-    denyWithdrawal,
-    charge,
-    accountPayout,
-    balance
-} from '../specs'
-import { root, readFile, sign, verify, parseError } from './utils'
-import { serialize } from './trustlySerializeData'
-import { ConfigInterface } from '../Interfaces'
 
 export class Client {
     endpoint: string = 'https://test.trustly.com/api/1'

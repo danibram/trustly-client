@@ -1,12 +1,27 @@
+import { ConfigInterface } from './Interfaces'
 import { Client } from './lib/Client'
-
-import { deposit, refund, selectAccount, withdraw, approveWithdrawal, denyWithdrawal, charge } from './specs'
-import { ConfigInterface, MethodInterface } from './Interfaces'
-import { root, readFile, sign, verify } from './lib/utils'
 import { serialize, trustlySerializeData } from './lib/trustlySerializeData'
+import { readFile, root, sign, verify } from './lib/utils'
+import {
+    approveWithdrawal,
+    charge,
+    denyWithdrawal,
+    deposit,
+    refund,
+    selectAccount,
+    withdraw
+} from './specs'
 
 export const TrustlyClient = Client
-export const constants = { deposit, refund, selectAccount, withdraw, approveWithdrawal, denyWithdrawal, charge }
+export const constants = {
+    deposit,
+    refund,
+    selectAccount,
+    withdraw,
+    approveWithdrawal,
+    denyWithdrawal,
+    charge
+}
 export const utils = {
     root,
     readFile
