@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/danibram/trustly-client/compare/v3.0.0...v3.0.1) (2018-10-24)
+
+
+### Bug Fixes
+
+* **package:** update axios to version 0.18.0 ([b75a646](https://github.com/danibram/trustly-client/commit/b75a646))
+* **serialization:** Fix serializing arrays PR merge ([11dd576](https://github.com/danibram/trustly-client/commit/11dd576))
+
+
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/danibram/trustly-client/compare/v2.1.0...v3.0.0) (2018-02-05)
 
