@@ -3,31 +3,27 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 <a name="3.0.1"></a>
+
 ## [3.0.1](https://github.com/danibram/trustly-client/compare/v3.0.0...v3.0.1) (2018-10-24)
 
-
 ### Bug Fixes
 
-* **package:** update axios to version 0.18.0 ([b75a646](https://github.com/danibram/trustly-client/commit/b75a646))
-* **serialization:** Fix serializing arrays PR merge ([11dd576](https://github.com/danibram/trustly-client/commit/11dd576))
-
-
+-   **packages:** update libs
+-   **package:** update axios to version 0.18.0 ([b75a646](https://github.com/danibram/trustly-client/commit/b75a646))
+-   **serialization:** Fix serializing arrays ([11dd576](https://github.com/danibram/trustly-client/commit/11dd576))
 
 <a name="3.0.0"></a>
-# [3.0.0](https://github.com/danibram/trustly-client/compare/v2.1.0...v3.0.0) (2018-02-05)
 
+# [3.0.0](https://github.com/danibram/trustly-client/compare/v2.1.0...v3.0.0) (2018-02-05)
 
 ### Bug Fixes
 
-* Modified README to 3.0.0 ([4a7c2b5](https://github.com/danibram/trustly-client/commit/4a7c2b5))
-
+-   Modified README to 3.0.0 ([4a7c2b5](https://github.com/danibram/trustly-client/commit/4a7c2b5))
 
 ### Features
 
-* **chore:** make better interfaces and specs ([3dbacf0](https://github.com/danibram/trustly-client/commit/3dbacf0))
-* **chore:** remove validations, and clean up some code ([e1cded1](https://github.com/danibram/trustly-client/commit/e1cded1))
-
-
+-   **chore:** make better interfaces and specs ([3dbacf0](https://github.com/danibram/trustly-client/commit/3dbacf0))
+-   **chore:** remove validations, and clean up some code ([e1cded1](https://github.com/danibram/trustly-client/commit/e1cded1))
 
 <a name="2.0.7"></a>
 
@@ -35,11 +31,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Updates
 
-* Added credit method thanks to @karteekkommana
+-   Added credit method thanks to @karteekkommana
 
 ### Fixes
 
-* Fix a field on SelectAccount
+-   Fix a field on SelectAccount
 
 <a name="2.0.5"></a>
 
@@ -47,13 +43,13 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Updates
 
-* Better configuration
+-   Better configuration
 
 ### Fixes
 
-* Fixes on examples
-* Fix on create notification response
-* Fix some bugfixes on serialization data
+-   Fixes on examples
+-   Fix on create notification response
+-   Fix some bugfixes on serialization data
 
 <a name="2.0.0"></a>
 
@@ -61,16 +57,16 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* Rewrite completely in typescript
-* Remove unused libs
-* Promise style
-* You dont need to use anymore init(), it automatically do for you
-* And more... Stay tuned
+-   Rewrite completely in typescript
+-   Remove unused libs
+-   Promise style
+-   You dont need to use anymore init(), it automatically do for you
+-   And more... Stay tuned
 
 ### Deprecations
 
-* No more `.init()`
-* No more callback style
+-   No more `.init()`
+-   No more callback style
 
 <a name="1.3.7"></a>
 
@@ -78,7 +74,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Fixes
 
-* Fix Error on serialization
+-   Fix Error on serialization
 
 <a name="1.3.5"></a>
 
@@ -86,16 +82,16 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* Added RequestDirectDebitMandate in deposit
-* Added withdraw (thanks @rizr)
-* Added approveWithdrawal (thanks @rizr)
-* Added denyWithdrawal (thanks @rizr)
+-   Added RequestDirectDebitMandate in deposit
+-   Added withdraw (thanks @rizr)
+-   Added approveWithdrawal (thanks @rizr)
+-   Added denyWithdrawal (thanks @rizr)
 
 ### Fixes
 
-* Remaining field in charge method
-* Use uuid instead node-uuid
-* Updated all attributes
+-   Remaining field in charge method
+-   Use uuid instead node-uuid
+-   Updated all attributes
 
 <a name="1.2.0"></a>
 
@@ -103,8 +99,8 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* Added charge (thanks @Iteam1337)
-* Added select account (thanks @Iteam1337)
+-   Added charge (thanks @Iteam1337)
+-   Added select account (thanks @Iteam1337)
 
 <a name="1.1.3"></a>
 
@@ -112,12 +108,12 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* Working for Deposit, Refund and management of notifications.
+-   Working for Deposit, Refund and management of notifications.
 
 ### Fixes
 
-* Better management of the errors.
-* Correct and fix refund.
+-   Better management of the errors.
+-   Correct and fix refund.
 
 <a name="1.1.1"></a>
 
@@ -125,7 +121,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Fixes
 
-* Fix problems with notifications some example updates.
+-   Fix problems with notifications some example updates.
 
 <a name="1.1.0"></a>
 
@@ -133,7 +129,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Fixes
 
-* Correct notifications handling, remove "handleNotification" is replaced by "createNotificationResponse", more correct, and added an express server as example.
+-   Correct notifications handling, remove "handleNotification" is replaced by "createNotificationResponse", more correct, and added an express server as example.
 
 <a name="1.0.4"></a>
 
@@ -141,10 +137,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* Updates in packages.
-* Update the load method.
-* Added callback example.
-* Fix paths, problems with the keys.
+-   Updates in packages.
+-   Update the load method.
+-   Added callback example.
+-   Fix paths, problems with the keys.
 
 <a name="1.0.0"></a>
 
@@ -152,10 +148,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* Firsts release.
-* Added Deposit
-* Added Refund
-* Added handleNotification functions.
-* Added Sign
-* Added verify
-* Added compose requests, and responses done.
+-   Firsts release.
+-   Added Deposit
+-   Added Refund
+-   Added handleNotification functions.
+-   Added Sign
+-   Added verify
+-   Added compose requests, and responses done.
