@@ -93,7 +93,7 @@
     ]
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.1",
     "fs": "^0.0.1-security",
     "tslib": "^1.9.3",
     "uuid": "^3.3.2"
