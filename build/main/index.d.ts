@@ -1,14 +1,14 @@
+import { ConfigInterface } from './Interfaces';
 import { Client } from './lib/Client';
-import { ConfigInterface, MethodInterface } from './Interfaces';
 export declare const TrustlyClient: typeof Client;
 export declare const constants: {
-    deposit: MethodInterface;
-    refund: MethodInterface;
-    selectAccount: MethodInterface;
-    withdraw: MethodInterface;
-    approveWithdrawal: MethodInterface;
-    denyWithdrawal: MethodInterface;
-    charge: MethodInterface;
+    deposit: import("./Interfaces").MethodInterface;
+    refund: import("./Interfaces").MethodInterface;
+    selectAccount: import("./Interfaces").MethodInterface;
+    withdraw: import("./Interfaces").MethodInterface;
+    approveWithdrawal: import("./Interfaces").MethodInterface;
+    denyWithdrawal: import("./Interfaces").MethodInterface;
+    charge: import("./Interfaces").MethodInterface;
 };
 export declare const utils: {
     root: (...args: any[]) => string;
