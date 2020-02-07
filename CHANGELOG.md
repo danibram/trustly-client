@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.1.0"></a>
+# [3.1.0](https://github.com/danibram/trustly-client/compare/v3.0.1...v3.1.0) (2020-02-07)
+
+
+### Bug Fixes
+
+* **serialization:** fix over 0 case omited ([b6780fb](https://github.com/danibram/trustly-client/commit/b6780fb))
+
+
+### Features
+
+* **chore:** added example for testing the serialization ([9b7135f](https://github.com/danibram/trustly-client/commit/9b7135f))
+
+
+
 <a name="3.0.1"></a>
 
 ## [3.0.1](https://github.com/danibram/trustly-client/compare/v3.0.0...v3.0.1) (2018-10-24)
