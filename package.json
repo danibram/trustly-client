@@ -61,7 +61,7 @@
     "codecov": "^3.1.0",
     "concurrently": "^4.0.1",
     "cpx": "^1.5.0",
-    "gh-pages": "^2.0.1",
+    "gh-pages": "^3.0.0",
     "hash.js": "^1.1.5",
     "mkdirp": "^0.5.1",
     "npm-scripts-info": "^0.3.9",
