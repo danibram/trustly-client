@@ -12,6 +12,8 @@ import {
     withdraw
 } from './specs'
 
+export { Client } from './lib/Client'
+
 export const TrustlyClient = Client
 export const constants = {
     deposit,
