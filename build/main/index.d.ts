@@ -1,5 +1,6 @@
 import { ConfigInterface } from './Interfaces';
 import { Client } from './lib/Client';
+export { Client } from './lib/Client';
 export declare const TrustlyClient: typeof Client;
 export declare const constants: {
     deposit: import("./Interfaces").MethodInterface;
