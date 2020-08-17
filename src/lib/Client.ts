@@ -97,15 +97,13 @@ export class Client {
         }
     }
 
-    _prepareNotificationResponse = function (notification) {
+    _prepareNotificationResponse = function (notification, status: 'OK' | 'FAILED' = 'OK') {
         let req = {
             result: {
                 signature: '',
                 uuid: notification.params.uuid,
                 method: notification.method,
-                data: {
-                    status: 'OK'
-                }
+                data: { status }
             },
             version: '1.1'
         }
@@ -122,7 +120,7 @@ export class Client {
         return req
     }
 
-    createNotificationResponse = async (notification, callback) => {
+    createNotificationResponse = async (notification, status: 'OK' | 'FAILED' = 'OK') => {
         await this.ready
 
         let lastNotification = null
@@ -154,7 +152,7 @@ export class Client {
                 throw new Error('Cant verify the response.')
             }
 
-            return this._prepareNotificationResponse(notification)
+            return this._prepareNotificationResponse(notification, status)
         } catch (err) {
             throw {
                 error: err,
