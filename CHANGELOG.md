@@ -2,15 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-<a name="3.1.2"></a>
-## [3.1.2](https://github.com/danibram/trustly-client/compare/v3.1.1...v3.1.2) (2020-08-18)
+<a name="3.1.3"></a>
 
+## [3.1.3](https://github.com/danibram/trustly-client/compare/v3.1.2...v3.1.3) (2020-08-25)
+
+## Now is live, 3.1.2 was a bad build
 
 ### Bug Fixes
 
-* **notification-response:** Add 'FAILED' response ([f45ca35](https://github.com/danibram/trustly-client/commit/f45ca35))
+-   **notification-response:** Add 'FAILED' response ([f45ca35](https://github.com/danibram/trustly-client/commit/f45ca35))
 
+<a name="3.1.2"></a>
 
+## [3.1.2](https://github.com/danibram/trustly-client/compare/v3.1.1...v3.1.2) (2020-08-18)
+
+### Bug Fixes
+
+-   **notification-response:** Add 'FAILED' response ([f45ca35](https://github.com/danibram/trustly-client/commit/f45ca35))
 
 <a name="3.1.1"></a>
 
