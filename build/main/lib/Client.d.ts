@@ -19,24 +19,24 @@ export declare class Client {
         version: string;
     };
     _verifyResponse: (res: any) => void;
-    _prepareNotificationResponse: (notification: any) => {
+    _prepareNotificationResponse: (notification: any, status?: "OK" | "FAILED") => {
         result: {
             signature: string;
             uuid: any;
             method: any;
             data: {
-                status: string;
+                status: "OK" | "FAILED";
             };
         };
         version: string;
     };
-    createNotificationResponse: (notification: any, callback: any) => Promise<{
+    createNotificationResponse: (notification: any, status?: "OK" | "FAILED") => Promise<{
         result: {
             signature: string;
             uuid: any;
             method: any;
             data: {
-                status: string;
+                status: "OK" | "FAILED";
             };
         };
         version: string;
