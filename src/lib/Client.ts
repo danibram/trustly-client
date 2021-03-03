@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { ConfigInterface } from '../Interfaces';
 import { accountPayout, approveWithdrawal, balance, charge, denyWithdrawal, deposit, refund, selectAccount, withdraw } from '../specs';
 import { serialize } from './trustlySerializeData';
@@ -11,6 +11,8 @@ export class Client {
     environment: 'development' | 'production' | 'prod' | 'p' = 'development'
     username: string = ''
     password: string = ''
+
+    axiosRequestConfig: AxiosRequestConfig | undefined
 
     privateKeyPath: string | undefined
     publicKeyPath: string
@@ -55,6 +57,7 @@ export class Client {
         this.password = config.password
         this.privateKeyPath = config.privateKeyPath
         this.privateKey = config.privateKey
+        this.axiosRequestConfig = config.axiosRequestConfig;
 
         this.ready = this._init()
     }
@@ -170,7 +173,8 @@ export class Client {
             url: this.endpoint,
             headers: { 'Content-Type': 'application/json; charset=utf-8' },
             data: reqParams,
-            timeout: 2000
+            timeout: 2000,
+            ...(this.axiosRequestConfig || {})
         })
             .then(({ data }) => {
                 this._lastResponse = data
