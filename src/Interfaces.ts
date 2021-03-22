@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from 'axios';
+
 export type MethodInterface = {
     method: string
     dataFields: string[]
@@ -16,4 +18,5 @@ export type ConfigInterface = {
     specs?: {
         [key: string]: MethodInterface
     }
+    axiosRequestConfig?: Pick<AxiosRequestConfig, 'timeout'>
 }
