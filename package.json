@@ -1,100 +1,99 @@
 {
-    "name": "trustly-client",
-    "version": "3.1.3",
-    "description": "Trustly client for node.js integrations.",
-    "main": "build/main/index.js",
-    "typings": "build/main/index.d.ts",
-    "module": "build/module/index.js",
-    "repository": "https://github.com/danibram/trustly-client",
-    "author": {
-        "name": "Daniel Biedma Ramos",
-        "email": "info@dbr.io",
-        "url": "https://dbr.io"
-    },
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/danibram/trustly-client/issues"
-    },
-    "homepage": "https://github.com/danibram/trustly-client",
-    "scripts": {
-        "info": "npm-scripts-info",
-        "build": "trash build/module && trash build/main && npm run build:main && npm run build:module",
-        "build:main": "tsc -p tsconfig.json",
-        "build:module": "tsc -p config/exports/tsconfig.module.json",
-        "lint": "tslint --project . src/**/*.ts",
-        "unit": "npm run build && nyc ava",
-        "check-coverage": "nyc check-coverage --lines 20 --functions 20 --branches 20",
-        "test": "npm run lint && npm run unit && npm run check-coverage",
-        "watch": "npm run build && concurrently -r --kill-others 'npm run --silent build:main -- -w' 'sleepms 2000 && ava --watch'",
-        "cov": "npm run unit && npm run html-coverage && opn coverage/index.html",
-        "html-coverage": "nyc report --reporter=html",
-        "send-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
-        "docs": "npm run docs:html && opn build/docs/index.html",
-        "docs:html": "typedoc src/index.ts --excludePrivate --mode file --theme minimal --out build/docs",
-        "docs:json": "typedoc --mode file --json build/docs/typedoc.json src/index.ts",
-        "docs:publish": "npm run docs:html && gh-pages -d build/docs",
-        "changelog": "standard-version",
-        "release": "npm run reset && npm run test && npm run changelog",
-        "reset": "git clean -dfx && git reset --hard && npm run"
-    },
-    "scripts-info": {
-        "info": "Display information about the scripts",
-        "build": "(Trash and re)build the library",
-        "lint": "Lint all typescript source files",
-        "unit": "Build the library and run unit tests",
-        "test": "Lint, build, and test the library",
-        "watch": "Watch source files, rebuild library on changes, rerun relevant tests",
-        "cov": "Run tests, generate the HTML coverage report, and open it in a browser",
-        "docs": "Generate HTML API documentation and open it in a browser",
-        "docs:publish": "Generate HTML API documentation and push it to GitHub Pages",
-        "docs:json": "Generate API documentation in typedoc JSON format",
-        "changelog": "Bump package.json version, update CHANGELOG.md, tag a release",
-        "reset": "Delete all untracked files and reset the repo to the last commit",
-        "release": "Clean, build, test, publish docs, and prepare release (a one-step publish process)"
-    },
-    "engines": {
-        "node": ">=4.5"
-    },
-    "devDependencies": {
-        "@types/node": "^10.12.0",
-        "ava": "^0.25.0",
-        "codecov": "^3.1.0",
-        "concurrently": "^4.0.1",
-        "cpx": "^1.5.0",
-        "gh-pages": "^2.0.1",
-        "hash.js": "^1.1.5",
-        "mkdirp": "^0.5.1",
-        "npm-scripts-info": "^0.3.9",
-        "nyc": "^13.1.0",
-        "opn-cli": "^3.1.0",
-        "sleep-ms": "^2.0.1",
-        "standard-version": "^4.4.0",
-        "trash-cli": "^1.4.0",
-        "tslint": "^5.11.0",
-        "tslint-config-prettier": "^1.15.0",
-        "typedoc": "^0.13.0",
-        "typescript": "^3.1.3"
-    },
-    "keywords": [
-        "trustly",
-        "client"
+  "name": "trustly-client",
+  "version": "3.2.0",
+  "description": "Trustly client for node.js integrations.",
+  "main": "build/main/index.js",
+  "typings": "build/main/index.d.ts",
+  "module": "build/module/index.js",
+  "repository": "https://github.com/danibram/trustly-client",
+  "author": {
+    "name": "Daniel Biedma Ramos",
+    "email": "info@dbr.io",
+    "url": "https://dbr.io"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danibram/trustly-client/issues"
+  },
+  "homepage": "https://github.com/danibram/trustly-client",
+  "scripts": {
+    "info": "npm-scripts-info",
+    "build": "trash build/module && trash build/main && npm run build:main && npm run build:module",
+    "build:main": "tsc -p tsconfig.json",
+    "build:module": "tsc -p config/exports/tsconfig.module.json",
+    "unit": "npm run build && nyc ava",
+    "check-coverage": "nyc check-coverage --lines 20 --functions 20 --branches 20",
+    "test": "npm run unit && npm run check-coverage",
+    "watch": "npm run build && concurrently -r --kill-others 'npm run --silent build:main -- -w' 'sleepms 2000 && ava --watch'",
+    "cov": "npm run unit && npm run html-coverage && opn coverage/index.html",
+    "html-coverage": "nyc report --reporter=html",
+    "send-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
+    "docs": "npm run docs:html && opn build/docs/index.html",
+    "docs:html": "typedoc src/index.ts --excludePrivate --mode file --theme minimal --out build/docs",
+    "docs:json": "typedoc --mode file --json build/docs/typedoc.json src/index.ts",
+    "docs:publish": "npm run docs:html && gh-pages -d build/docs",
+    "changelog": "standard-version",
+    "release": "npm run reset && npm run test && npm run changelog",
+    "reset": "git clean -dfx && git reset --hard && npm run"
+  },
+  "scripts-info": {
+    "info": "Display information about the scripts",
+    "build": "(Trash and re)build the library",
+    "lint": "Lint all typescript source files",
+    "unit": "Build the library and run unit tests",
+    "test": "Lint, build, and test the library",
+    "watch": "Watch source files, rebuild library on changes, rerun relevant tests",
+    "cov": "Run tests, generate the HTML coverage report, and open it in a browser",
+    "docs": "Generate HTML API documentation and open it in a browser",
+    "docs:publish": "Generate HTML API documentation and push it to GitHub Pages",
+    "docs:json": "Generate API documentation in typedoc JSON format",
+    "changelog": "Bump package.json version, update CHANGELOG.md, tag a release",
+    "reset": "Delete all untracked files and reset the repo to the last commit",
+    "release": "Clean, build, test, publish docs, and prepare release (a one-step publish process)"
+  },
+  "engines": {
+    "node": ">=4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.0",
+    "ava": "^0.25.0",
+    "codecov": "^3.1.0",
+    "concurrently": "^4.0.1",
+    "cpx": "^1.5.0",
+    "gh-pages": "^2.0.1",
+    "hash.js": "^1.1.5",
+    "mkdirp": "^0.5.1",
+    "npm-scripts-info": "^0.3.9",
+    "nyc": "^13.1.0",
+    "opn-cli": "^3.1.0",
+    "sleep-ms": "^2.0.1",
+    "standard-version": "^4.4.0",
+    "trash-cli": "^1.4.0",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "typedoc": "^0.13.0",
+    "typescript": "^3.1.3"
+  },
+  "keywords": [
+    "trustly",
+    "client"
+  ],
+  "nyc": {
+    "exclude": [
+      "**/*.spec.js"
+    ]
+  },
+  "ava": {
+    "files": [
+      "build/main/**/*.spec.js"
     ],
-    "nyc": {
-        "exclude": [
-            "**/*.spec.js"
-        ]
-    },
-    "ava": {
-        "files": [
-            "build/main/**/*.spec.js"
-        ],
-        "source": [
-            "build/main/**/*"
-        ]
-    },
-    "dependencies": {
-        "axios": "^0.21.1",
-        "tslib": "^2.1.0",
-        "uuid": "^8.3.2"
-    }
+    "source": [
+      "build/main/**/*"
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "tslib": "^2.1.0",
+    "uuid": "^8.3.2"
+  }
 }

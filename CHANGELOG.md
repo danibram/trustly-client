@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.2.0"></a>
+# [3.2.0](https://github.com/danibram/trustly-client/compare/v3.1.3...v3.2.0) (2021-03-22)
+
+
+### Features
+
+* **axios:** Make it possible to supply axios config ([1e1f77c](https://github.com/danibram/trustly-client/commit/1e1f77c))
+* **now you can override axios config:** added "axiosRequestConfig" field to override axios client configuration ([a84f7e2](https://github.com/danibram/trustly-client/commit/a84f7e2))
+
+
+
 <a name="3.1.3"></a>
 
 ## [3.1.3](https://github.com/danibram/trustly-client/compare/v3.1.2...v3.1.3) (2020-08-25)
