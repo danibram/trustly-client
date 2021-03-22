@@ -93,9 +93,8 @@
         ]
     },
     "dependencies": {
-        "axios": "^0.18.0",
-        "fs": "^0.0.1-security",
-        "tslib": "^1.9.3",
-        "uuid": "^3.3.2"
+        "axios": "^0.21.1",
+        "tslib": "^2.1.0",
+        "uuid": "^8.3.2"
     }
 }
