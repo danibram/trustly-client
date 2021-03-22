@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from 'axios';
 export declare type MethodInterface = {
     method: string;
     dataFields: string[];
@@ -15,4 +16,5 @@ export declare type ConfigInterface = {
     specs?: {
         [key: string]: MethodInterface;
     };
+    axiosRequestConfig?: AxiosRequestConfig;
 };

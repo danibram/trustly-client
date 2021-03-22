@@ -1,9 +1,11 @@
+import { AxiosRequestConfig } from 'axios';
 import { ConfigInterface } from '../Interfaces';
 export declare class Client {
     endpoint: string;
     environment: 'development' | 'production' | 'prod' | 'p';
     username: string;
     password: string;
+    axiosRequestConfig: AxiosRequestConfig | {};
     privateKeyPath: string | undefined;
     publicKeyPath: string;
     privateKey: string | undefined;
