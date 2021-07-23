@@ -21,7 +21,7 @@ export declare class Client {
         version: string;
     };
     _verifyResponse: (res: any) => void;
-    _prepareNotificationResponse: (notification: any, status?: "OK" | "FAILED", additionalData?: {}) => {
+    _prepareNotificationResponse: (notification: any, status?: "OK" | "FAILED") => {
         result: {
             signature: string;
             uuid: any;
