@@ -3,24 +3,15 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 <a name="3.2.1"></a>
-## [3.2.1](https://github.com/danibram/trustly-client/compare/v3.2.0...v3.2.1) (2021-07-23)
 
+# [3.2.1](https://github.com/danibram/trustly-client/compare/v3.2.0...v3.2.1) (2021-07-23)
 
+### Features:
 
-<a name=""></a>
-# [](https://github.com/danibram/trustly-client/compare/v3.2.0...v) (2021-07-23)
+Added 2 new functions to make notifications more customizable:
 
-
-
-<a name=""></a>
-# [](https://github.com/danibram/trustly-client/compare/v3.2.0...v) (2021-07-23)
-
-
-
-<a name=""></a>
-# [](https://github.com/danibram/trustly-client/compare/v3.2.0...v) (2021-07-23)
-
-
+-   verifyAndParseNotification
+-   composeNotificationResponse
 
 <a name="3.2.0"></a>
 
