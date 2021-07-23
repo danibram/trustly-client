@@ -134,10 +134,30 @@ export class Client {
         return req
     }
 
-    createNotificationResponse = async (
-        notification,
-        status: 'OK' | 'FAILED' = 'OK'
-    ) => {
+    composeNotificationResponse = function (notification, data = {}) {
+        let req = {
+            result: {
+                signature: '',
+                uuid: notification.params.uuid,
+                method: notification.method,
+                data: data,
+            },
+            version: '1.1',
+        }
+
+        req.result.signature = sign(
+            serialize(
+                notification.method,
+                notification.params.uuid,
+                req.result.data
+            ),
+            this.privateKey
+        )
+
+        return req
+    }
+
+    verifyAndParseNotification = async (notification) => {
         await this.ready
 
         let lastNotification = null
@@ -169,12 +189,31 @@ export class Client {
                 throw new Error('Cant verify the response.')
             }
 
-            return this._prepareNotificationResponse(notification, status)
+            return notification
         } catch (err) {
             throw {
                 error: err,
                 lastNotification: lastNotification,
             }
+        }
+    }
+
+    createNotificationResponse = async (
+        notification,
+        status: 'OK' | 'FAILED' = 'OK'
+    ) => {
+        await this.ready
+
+        try {
+            let parsedNotification = await this.verifyAndParseNotification(
+                notification
+            )
+
+            return this.composeNotificationResponse(parsedNotification, {
+                status,
+            })
+        } catch (err) {
+            throw err
         }
     }
 
@@ -234,7 +273,7 @@ export class Client {
     request = (method, params, attributes?) =>
         this._createMethod(method)(params, attributes)
 
-    private _init = async (): Promise<any> => {
+    private _init = async (): Promise<void> => {
         try {
             this.publicKey = await readFile(this.publicKeyPath)
         } catch (err) {

@@ -9,7 +9,7 @@ const app = express()
 const tClient = client({
     username: 'Your_trustly_username',
     password: 'Your_trustly_password',
-    privateKeyPath: 'Path/to/your/private/pem/file'
+    privateKeyPath: 'Path/to/your/private/pem/file',
 })
 
 const port = process.env.PORT || 4343
@@ -21,7 +21,7 @@ app.use(bodyParser.json())
 app.post('/notification', function (req, res) {
     console.log('- Notification is comming. √')
     tClient
-        .prepareNotificationResponse(req.body)
+        .createNotificationResponse(req.body)
         .then(function (data) {
             console.log(util.inspect(data, false, 20, true))
             res.send(data)

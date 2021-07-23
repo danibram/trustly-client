@@ -9,7 +9,7 @@ import {
     deposit,
     refund,
     selectAccount,
-    withdraw
+    withdraw,
 } from './specs'
 
 export { Client } from './lib/Client'
@@ -22,17 +22,17 @@ export const constants = {
     withdraw,
     approveWithdrawal,
     denyWithdrawal,
-    charge
+    charge,
 }
 export const utils = {
     root,
-    readFile
+    readFile,
 }
 export const helpers = {
     serialize,
     trustlySerializeData,
     sign,
-    verify
+    verify,
 }
 
 export const client = (config: ConfigInterface) => new Client(config)
