@@ -21,7 +21,7 @@ export declare class Client {
         version: string;
     };
     _verifyResponse: (res: any) => void;
-    _prepareNotificationResponse: (notification: any, status?: "OK" | "FAILED") => {
+    _prepareNotificationResponse: (notification: any, status?: "OK" | "FAILED", additionalData?: {}) => {
         result: {
             signature: string;
             uuid: any;
@@ -32,14 +32,22 @@ export declare class Client {
         };
         version: string;
     };
+    composeNotificationResponse: (notification: any, data?: {}) => {
+        result: {
+            signature: string;
+            uuid: any;
+            method: any;
+            data: {};
+        };
+        version: string;
+    };
+    verifyAndParseNotification: (notification: any) => Promise<any>;
     createNotificationResponse: (notification: any, status?: "OK" | "FAILED") => Promise<{
         result: {
             signature: string;
             uuid: any;
             method: any;
-            data: {
-                status: "OK" | "FAILED";
-            };
+            data: {};
         };
         version: string;
     }>;

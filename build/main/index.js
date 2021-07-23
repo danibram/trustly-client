@@ -14,17 +14,17 @@ exports.constants = {
     withdraw: specs_1.withdraw,
     approveWithdrawal: specs_1.approveWithdrawal,
     denyWithdrawal: specs_1.denyWithdrawal,
-    charge: specs_1.charge
+    charge: specs_1.charge,
 };
 exports.utils = {
     root: utils_1.root,
-    readFile: utils_1.readFile
+    readFile: utils_1.readFile,
 };
 exports.helpers = {
     serialize: trustlySerializeData_1.serialize,
     trustlySerializeData: trustlySerializeData_1.trustlySerializeData,
     sign: utils_1.sign,
-    verify: utils_1.verify
+    verify: utils_1.verify,
 };
 exports.client = (config) => new Client_1.Client(config);
 exports.default = exports.client;
