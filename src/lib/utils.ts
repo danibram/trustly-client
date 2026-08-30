@@ -10,7 +10,6 @@ export const readFile = (path: string): Promise<string> =>
         })
     )
 
-// Encrypt / Decrypt
 export const sign = function (data, key) {
     let signer = crypto.createSign('RSA-SHA1')
     signer.update(data, 'utf8')

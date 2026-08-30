@@ -1,6 +1,4 @@
-// Trustly's public keys, used to verify API responses and notifications.
-// Sources: https://trustly.com / https://test.trustly.com integration docs
-// (also shipped as .pem files in keys/).
+// Trustly's public keys, duplicated as .pem files in keys/ — keep both in sync.
 export const TRUSTLY_PROD_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoZhnqiELeoX3QNSg7jpU
 kbLV4BU32LoSMuABAaPdxhpZaccFYud2z4QUlMq/j46vdVDpaCFaCZ+qNT5+tHbQ

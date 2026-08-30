@@ -5,12 +5,7 @@ export type MethodInterface = {
     requiredFields: string[]
 }
 
-/**
- * Minimal structural type for a fetch implementation. The global fetch of
- * Node.js >= 18 satisfies it, and so do undici, node-fetch or any wrapper
- * with the same call shape, so a custom implementation (proxy, interceptors,
- * mocks in tests...) can be injected via `ConfigInterface.fetch`.
- */
+/** Structural fetch type: the global fetch, undici, node-fetch or any mock with the same shape fits. */
 export type FetchLike = (
     url: string,
     init?: {
@@ -38,13 +33,10 @@ export type ConfigInterface = {
     specs?: {
         [key: string]: MethodInterface
     }
-    /** Request timeout in milliseconds. Defaults to 2000, like v3. */
+    /** Request timeout in milliseconds, default 2000. */
     timeout?: number
-    /**
-     * Extra options merged into every fetch call (headers, dispatcher,
-     * agent...). Applied last, so they win over the defaults.
-     */
+    /** Extra options merged into every fetch call, applied last so they win over the defaults. */
     fetchOptions?: Record<string, any>
-    /** Alternative fetch implementation. Defaults to the global fetch. */
+    /** Alternative fetch implementation, defaults to the global fetch. */
     fetch?: FetchLike
 }
