@@ -7,7 +7,7 @@ import { Client } from '../../src/lib/Client'
 import { serialize } from '../../src/lib/trustlySerializeData'
 import { sign, verify } from '../../src/lib/utils'
 
-const KEYS = join(__dirname, '..', '..', 'build', 'keys', 'test')
+const KEYS = join(__dirname, '..', 'keys')
 const MERCHANT_PUBLIC = join(KEYS, 'merchant_public_key.pem')
 const MERCHANT_PRIVATE = join(KEYS, 'merchant_private_key.pem')
 const privateKeyPem = readFileSync(MERCHANT_PRIVATE, 'utf8')
@@ -58,12 +58,39 @@ describe('constructor', () => {
             const client = new Client({
                 ...baseConfig,
                 environment,
-                // the default prod public key path does not exist in src
                 publicKeyPath: MERCHANT_PUBLIC,
             })
             expect(client.endpoint).toBe('https://trustly.com/api/1')
             expect(client.environment).toBe('production')
         }
+    })
+
+    it('honors a custom endpoint from the config', () => {
+        const client = new Client({
+            ...baseConfig,
+            endpoint: 'http://127.0.0.1:9999/api/1',
+        })
+        expect(client.endpoint).toBe('http://127.0.0.1:9999/api/1')
+    })
+
+    it('defaults to the embedded trustly public keys per environment', async () => {
+        const { TRUSTLY_PROD_PUBLIC_KEY, TRUSTLY_TEST_PUBLIC_KEY } =
+            await import('../../src/keys')
+        const { publicKeyPath, ...noPublicKey } = baseConfig
+
+        const dev = new Client(noPublicKey)
+        expect(dev.publicKey).toBe(TRUSTLY_TEST_PUBLIC_KEY)
+
+        const prod = new Client({ ...noPublicKey, environment: 'production' })
+        expect(prod.publicKey).toBe(TRUSTLY_PROD_PUBLIC_KEY)
+    })
+
+    it('accepts an inline public key', async () => {
+        const publicKey = readFileSync(MERCHANT_PUBLIC, 'utf8')
+        const { publicKeyPath, ...noPublicKey } = baseConfig
+        const client = new Client({ ...noPublicKey, publicKey })
+        await client.ready
+        expect(client.publicKey).toBe(publicKey)
     })
 
     it('accepts an inline private key instead of a path', async () => {
@@ -102,9 +129,9 @@ describe('_prepareRequest', () => {
         expect(params.Data.Attributes).toEqual({ Currency: 'EUR' })
 
         const serialized = serialize('Deposit', params.UUID, params.Data)
-        expect(
-            verify(serialized, params.Signature, client.publicKey)
-        ).toBe(true)
+        expect(verify(serialized, params.Signature, client.publicKey)).toBe(
+            true
+        )
     })
 
     it('generates a fresh UUID per request', async () => {
@@ -201,9 +228,9 @@ describe('notifications', () => {
             res.result.uuid,
             res.result.data
         )
-        expect(
-            verify(serialized, res.result.signature, client.publicKey)
-        ).toBe(true)
+        expect(verify(serialized, res.result.signature, client.publicKey)).toBe(
+            true
+        )
     })
 
     it('creates a FAILED notification response on demand', async () => {
@@ -354,8 +381,125 @@ describe('_makeRequest over HTTP', () => {
 
     it('rejects when the endpoint is unreachable', async () => {
         const client = await makeClient('http://127.0.0.1:1')
-        await expect(
-            client.balance({})
-        ).rejects.toBeTruthy()
+        await expect(client.balance({})).rejects.toBeTruthy()
+    })
+
+    it('rejects with a timeout error when the server is too slow', async () => {
+        const endpoint = await new Promise<string>((resolve) => {
+            server = createServer((_req, res) => {
+                // never respond within the timeout window
+                setTimeout(() => res.end('{}'), 5000).unref()
+            })
+            server.listen(0, '127.0.0.1', () => {
+                const { port } = server!.address() as AddressInfo
+                resolve(`http://127.0.0.1:${port}`)
+            })
+        })
+
+        const client = new Client({ ...baseConfig, timeout: 100 })
+        await client.ready
+        client.endpoint = endpoint
+
+        const start = Date.now()
+        await expect(client.balance({})).rejects.toBeTruthy()
+        expect(Date.now() - start).toBeLessThan(3000)
+    })
+
+    it('sends fetchOptions on every request', async () => {
+        let seenAuth: string | undefined
+        const endpoint = await startServer((body) => {
+            const data = { ok: '1' }
+            const result = {
+                signature: sign(
+                    serialize(body.method, body.params.UUID, data),
+                    privateKeyPem
+                ),
+                uuid: body.params.UUID,
+                method: body.method,
+                data,
+            }
+            return { payload: { result, version: '1.1' } }
+        })
+
+        server!.prependListener('request', (req) => {
+            seenAuth = req.headers['x-custom'] as string
+        })
+
+        const client = new Client({
+            ...baseConfig,
+            fetchOptions: {
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'X-Custom': 'injected',
+                },
+            },
+        })
+        await client.ready
+        client.endpoint = endpoint
+
+        await client.balance({})
+        expect(seenAuth).toBe('injected')
+    })
+})
+
+describe('custom fetch injection', () => {
+    it('uses the injected fetch implementation instead of the global one', async () => {
+        const calls: Array<{ url: string; init: any }> = []
+
+        const fakeFetch = async (url: string, init?: any) => {
+            calls.push({ url, init })
+            const body = JSON.parse(init.body)
+            const data = { orderid: 'injected-1' }
+            const result = {
+                signature: sign(
+                    serialize(body.method, body.params.UUID, data),
+                    privateKeyPem
+                ),
+                uuid: body.params.UUID,
+                method: body.method,
+                data,
+            }
+            return {
+                ok: true,
+                status: 200,
+                json: async () => ({ result, version: '1.1' }),
+            }
+        }
+
+        const client = new Client({ ...baseConfig, fetch: fakeFetch })
+        await client.ready
+
+        const response = await client.deposit(
+            {
+                NotificationURL: 'http://localhost/notify',
+                EndUserID: 'user@example.com',
+                MessageID: 'msg-injected',
+            },
+            { Currency: 'EUR' }
+        )
+
+        expect(response).toEqual({ orderid: 'injected-1' })
+        expect(calls).toHaveLength(1)
+        expect(calls[0].url).toBe('https://test.trustly.com/api/1')
+        expect(calls[0].init.method).toBe('POST')
+        expect(calls[0].init.headers['Content-Type']).toContain(
+            'application/json'
+        )
+    })
+
+    it('propagates errors from the injected fetch as clientError', async () => {
+        const failingFetch = async () => {
+            throw new Error('proxy exploded')
+        }
+        const client = new Client({ ...baseConfig, fetch: failingFetch })
+        await client.ready
+
+        try {
+            await client.balance({})
+            expect.unreachable('balance must reject')
+        } catch (err: any) {
+            expect(err.clientError).toBeInstanceOf(Error)
+            expect(err.clientError.message).toBe('proxy exploded')
+        }
     })
 })

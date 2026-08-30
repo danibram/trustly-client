@@ -31,9 +31,7 @@ describe('trustlySerializeData', () => {
     })
 
     it('serializes keys in alphabetical order', () => {
-        expect(trustlySerializeData({ b: '2', a: '1', c: '3' })).toBe(
-            'a1b2c3'
-        )
+        expect(trustlySerializeData({ b: '2', a: '1', c: '3' })).toBe('a1b2c3')
     })
 
     it('serializes null values as empty strings', () => {

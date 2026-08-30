@@ -5,6 +5,6 @@ coverage/
 tests/config.js
 tests/privateKey.pem
 .settings
-
 tests/test_keys
-tests/config.js
+dist/
+build/

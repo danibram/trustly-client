@@ -1,6 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios'
-import { v4 as uuidv4 } from 'uuid'
-import { ConfigInterface } from '../Interfaces'
+import { randomUUID } from 'crypto'
+import { ConfigInterface, FetchLike } from '../Interfaces'
+import { TRUSTLY_PROD_PUBLIC_KEY, TRUSTLY_TEST_PUBLIC_KEY } from '../keys'
 import {
     accountPayout,
     approveWithdrawal,
@@ -13,7 +13,7 @@ import {
     withdraw,
 } from '../specs'
 import { serialize } from './trustlySerializeData'
-import { parseError, readFile, root, sign, verify } from './utils'
+import { parseError, readFile, sign, verify } from './utils'
 
 export class Client {
     endpoint: string = 'https://test.trustly.com/api/1'
@@ -21,10 +21,12 @@ export class Client {
     username: string = ''
     password: string = ''
 
-    axiosRequestConfig: AxiosRequestConfig | {}
+    timeout: number
+    fetchOptions: Record<string, any>
+    fetchImpl: FetchLike | undefined
 
     privateKeyPath: string | undefined
-    publicKeyPath: string
+    publicKeyPath: string | undefined
 
     privateKey: string | undefined
     publicKey: string
@@ -40,15 +42,18 @@ export class Client {
             ['production', 'prod', 'p'].indexOf(config.environment) > -1
 
         this.publicKeyPath = config.publicKeyPath
-            ? config.publicKeyPath
-            : isProd
-            ? root('keys', 'trustly.com.public.pem')
-            : root('keys', 'test.trustly.com.public.pem')
 
-        this.endpoint = isProd
-            ? 'https://trustly.com/api/1'
-            : 'https://test.trustly.com/api/1'
+        this.endpoint = config.endpoint
+            ? config.endpoint
+            : isProd
+              ? 'https://trustly.com/api/1'
+              : 'https://test.trustly.com/api/1'
         this.environment = isProd ? 'production' : 'development'
+        this.publicKey = config.publicKey
+            ? config.publicKey
+            : isProd
+              ? TRUSTLY_PROD_PUBLIC_KEY
+              : TRUSTLY_TEST_PUBLIC_KEY
 
         if (!config.username) {
             throw `No username provided, please provide one.`
@@ -66,7 +71,9 @@ export class Client {
         this.password = config.password
         this.privateKeyPath = config.privateKeyPath
         this.privateKey = config.privateKey
-        this.axiosRequestConfig = config.axiosRequestConfig || {}
+        this.timeout = config.timeout || 2000
+        this.fetchOptions = config.fetchOptions || {}
+        this.fetchImpl = config.fetch
         this.ready = this._init()
     }
 
@@ -83,7 +90,7 @@ export class Client {
             version: '1.1',
         }
 
-        let UUID = uuidv4()
+        let UUID = randomUUID()
 
         let Data = Object.assign({}, data, {
             Attributes: attributes ? attributes : null,
@@ -205,9 +212,8 @@ export class Client {
         await this.ready
 
         try {
-            let parsedNotification = await this.verifyAndParseNotification(
-                notification
-            )
+            let parsedNotification =
+                await this.verifyAndParseNotification(notification)
 
             return this.composeNotificationResponse(parsedNotification, {
                 status,
@@ -217,39 +223,50 @@ export class Client {
         }
     }
 
-    _makeRequest = (reqParams) => {
+    _makeRequest = async (reqParams) => {
         this._lastRequest = reqParams
         this._lastResponse = null
 
-        return axios({
-            method: 'post',
-            url: this.endpoint,
-            headers: { 'Content-Type': 'application/json; charset=utf-8' },
-            data: reqParams,
-            timeout: 2000,
-            ...this.axiosRequestConfig,
-        })
-            .then(({ data }) => {
-                this._lastResponse = data
+        const fetchImpl: FetchLike =
+            this.fetchImpl || (globalThis.fetch as FetchLike)
 
-                if (data.result) {
-                    this._verifyResponse(data.result)
-                    return data.result.data
-                }
+        if (!fetchImpl) {
+            throw new Error(
+                'clientError: No fetch implementation available. Use Node.js >= 20 or pass one via config.fetch.'
+            )
+        }
 
-                if (data.error) {
-                    return parseError(
-                        data,
-                        this._lastRequest,
-                        this._lastResponse
-                    )
-                }
-
-                throw 'Cant parse the response, check the lastResponse.'
+        try {
+            const response = await fetchImpl(this.endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                body: JSON.stringify(reqParams),
+                signal: AbortSignal.timeout(this.timeout),
+                ...this.fetchOptions,
             })
-            .catch((error) => {
-                parseError(error, this._lastRequest, this._lastResponse)
-            })
+
+            let data
+            try {
+                data = await response.json()
+            } catch (error) {
+                throw `Cant parse the response, check the lastResponse. HTTP status: ${response.status}`
+            }
+
+            this._lastResponse = data
+
+            if (data.result) {
+                this._verifyResponse(data.result)
+                return data.result.data
+            }
+
+            if (data.error) {
+                return parseError(data, this._lastRequest, this._lastResponse)
+            }
+
+            throw 'Cant parse the response, check the lastResponse.'
+        } catch (error) {
+            parseError(error, this._lastRequest, this._lastResponse)
+        }
     }
 
     deposit = (data, attributes?) =>
@@ -274,10 +291,12 @@ export class Client {
         this._createMethod(method)(params, attributes)
 
     private _init = async (): Promise<void> => {
-        try {
-            this.publicKey = await readFile(this.publicKeyPath)
-        } catch (err) {
-            throw `Error reading publickey. ${err}`
+        if (this.publicKeyPath) {
+            try {
+                this.publicKey = await readFile(this.publicKeyPath)
+            } catch (err) {
+                throw `Error reading publickey. ${err}`
+            }
         }
 
         if (this.privateKeyPath) {

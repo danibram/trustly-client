@@ -2,13 +2,27 @@
 
 [![npm version](https://img.shields.io/npm/v/trustly-client.svg?style=flat-square)][npm-home-module][![GitHub license](https://img.shields.io/npm/dt/trustly-client.svg?style=flat-square)][npm-home-module][![Support link][paypal-badge]][paypal-link]
 
-Node.js client for trustly integrations. Rewrite completely to Typescript and updated to use lasts libraries.
+Node.js client for trustly integrations. Written in Typescript, with zero runtime dependencies since v4: requests use the native `fetch` of Node.js and UUIDs come from `crypto.randomUUID()`.
+
+## Requirements
+
+- Version **4.x** requires Node.js **>= 20**. It ships CJS and ESM builds with type declarations.
+- If you are stuck on an older Node.js, stay on `trustly-client@^3`.
 
 ## Quickstart
 
 ### Installation
 
 Install the module with: `npm install trustly-client` or `yarn add trustly-client`
+
+### Migrating from v3
+
+- `axiosRequestConfig` is gone (axios was removed). Use `timeout`, `fetchOptions` or inject your own `fetch` (see below). Requests, signing and responses behave exactly as in v3.
+- If you used it for a timeout: pass `timeout: <ms>` (the default is still 2000).
+- If you used it for headers: pass `fetchOptions: { headers: { ... } }`.
+- If you used it for a proxy or a custom agent: pass an undici dispatcher via `fetchOptions`, or inject a whole `fetch` implementation via the `fetch` option.
+- `utils.root` was removed. Trustly's public keys are now embedded in the library (also shipped as `.pem` files in `keys/`) and exported as `TRUSTLY_PROD_PUBLIC_KEY` / `TRUSTLY_TEST_PUBLIC_KEY`.
+- The `endpoint` config option now works (it was ignored in v3).
 
 ### Usage
 
@@ -88,12 +102,28 @@ let tClient = client({
 
 This configuration is an object and this is the structure:
 
--   [required] 'privateKeyPath': Path to you private key
 -   [required] 'username': Your trustly api username
 -   [required] 'password': Your trustly api password
--   [optional] 'publicKeyPath': Path to a public key (for the general cases you don't need it, i package the trusty public key)
--   [optional] 'endpoint': By default is selected depending of the environment between "" and "".
+-   [required] 'privateKeyPath' or 'privateKey': Path to your private key, or the key itself as a string
+-   [optional] 'publicKeyPath' or 'publicKey': Path to a public key, or the key itself as a string (for the general cases you don't need it, the trustly public keys are embedded in the library)
+-   [optional] 'endpoint': Overrides the URL the client calls. By default is selected depending of the environment.
 -   [optional] 'environment': By default is "development", and it does the http calls to trustly development environment (`https://test.trustly.com/api/1`), if you pass production it turns to `https://trustly.com/api/1`, so remember to change that variable when you go to production
+-   [optional] 'timeout': Request timeout in milliseconds, default 2000
+-   [optional] 'fetchOptions': Extra options merged into every fetch call (headers, an undici dispatcher for proxies, etc.). Applied last, so they win over the defaults.
+-   [optional] 'fetch': An alternative fetch implementation. By default the global fetch of Node.js is used. Anything with the same call shape works: undici's fetch, node-fetch, a wrapper adding interceptors, or a mock in tests.
+
+```javascript
+// Example: inject a fetch that goes through a corporate proxy
+import { fetch as undiciFetch, ProxyAgent } from 'undici'
+
+const dispatcher = new ProxyAgent('http://proxy.corp.local:8080')
+let tClient = client({
+    username,
+    password,
+    privateKeyPath,
+    fetch: (url, init) => undiciFetch(url, { ...init, dispatcher }),
+})
+```
 
 ### Usage
 

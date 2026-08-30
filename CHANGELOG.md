@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="4.0.0"></a>
+
+# [4.0.0](https://github.com/danibram/trustly-client/compare/v3.2.1...v4.0.0) (2026-08-31)
+
+Modernization release, closes [#43](https://github.com/danibram/trustly-client/issues/43). Zero runtime dependencies.
+
+### Breaking changes
+
+-   Requires Node.js >= 20.
+-   axios removed, requests now use the native `fetch`. The `axiosRequestConfig` config option is gone; use `timeout` (ms, default still 2000), `fetchOptions` (merged into every fetch call) or `fetch` (inject your own implementation: undici with a proxy, node-fetch, mocks...).
+-   `uuid` dependency removed, UUIDs come from `crypto.randomUUID()`.
+-   `utils.root` removed. Trustly's public keys are embedded and exported as `TRUSTLY_PROD_PUBLIC_KEY` / `TRUSTLY_TEST_PUBLIC_KEY` (the `.pem` files are still shipped in `keys/`).
+
+### Features
+
+-   `endpoint` config option is honored (it was ignored before).
+-   New `publicKey` config option to pass the key inline, mirroring `privateKey`.
+-   Dual CJS + ESM build with type declarations (`exports` map), built with tsup.
+-   Unit test suite (vitest) covering serialization, signing, notifications and the HTTP flow; CI on GitHub Actions (Node 20/22/24).
+
 <a name="3.2.1"></a>
 
 # [3.2.1](https://github.com/danibram/trustly-client/compare/v3.2.0...v3.2.1) (2021-07-23)
