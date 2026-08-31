@@ -66,6 +66,42 @@ describe('parseError', () => {
         }
     })
 
+    it('keeps message and code when the trustly error has no nested details', () => {
+        try {
+            parseError(
+                { error: { code: 637, message: 'ERROR_MALFORMED_JSON' } },
+                null,
+                null
+            )
+            expect.unreachable('parseError must throw')
+        } catch (err: any) {
+            expect(err.trustlyError).toEqual({
+                method: null,
+                uuid: null,
+                message: 'ERROR_MALFORMED_JSON',
+                code: 637,
+            })
+        }
+    })
+
+    it('redacts the password inside lastRequest', () => {
+        const lastRequest = {
+            method: 'Deposit',
+            params: {
+                UUID: 'u-1',
+                Data: { Username: 'u', Password: 'secret', EndUserID: 'e' },
+            },
+        }
+        try {
+            parseError(new Error('boom'), lastRequest, null)
+            expect.unreachable('parseError must throw')
+        } catch (err: any) {
+            expect(err.lastRequest.params.Data.Password).toBe('[redacted]')
+            expect(err.lastRequest.params.Data.Username).toBe('u')
+        }
+        expect(lastRequest.params.Data.Password).toBe('secret')
+    })
+
     it('wraps a non-trustly error as clientError and throws', () => {
         const boom = new Error('network down')
         try {

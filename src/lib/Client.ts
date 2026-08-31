@@ -71,10 +71,13 @@ export class Client {
         this.password = config.password
         this.privateKeyPath = config.privateKeyPath
         this.privateKey = config.privateKey
-        this.timeout = config.timeout || 2000
+        this.timeout = config.timeout ?? 2000
         this.fetchOptions = config.fetchOptions || {}
         this.fetchImpl = config.fetch
         this.ready = this._init()
+        // mark the rejection as handled so a bad key path surfaces on the
+        // first API call instead of crashing the process at construction
+        this.ready.catch(() => undefined)
     }
 
     public _createMethod = (method) => async (params, attributes) => {
@@ -107,18 +110,27 @@ export class Client {
         return req
     }
 
-    _verifyResponse = function (res) {
+    _verifyResponse = (res, request?) => {
         let data = serialize(res.method, res.uuid, res.data)
         let v = verify(data, res.signature, this.publicKey)
         if (!v) {
             throw new Error('clientError: Cant verify the response.')
         }
+        if (
+            request &&
+            request.params &&
+            (res.uuid !== request.params.UUID || res.method !== request.method)
+        ) {
+            throw new Error(
+                'clientError: Response does not match the request (uuid or method mismatch).'
+            )
+        }
     }
 
-    _prepareNotificationResponse = function (
+    _prepareNotificationResponse = (
         notification,
         status: 'OK' | 'FAILED' = 'OK'
-    ) {
+    ) => {
         let req = {
             result: {
                 signature: '',
@@ -141,7 +153,7 @@ export class Client {
         return req
     }
 
-    composeNotificationResponse = function (notification, data = {}) {
+    composeNotificationResponse = (notification, data = {}) => {
         let req = {
             result: {
                 signature: '',
@@ -223,49 +235,93 @@ export class Client {
         }
     }
 
+    _requestSignal = (): AbortSignal | undefined => {
+        const timeoutMs = Math.min(this.timeout, 2 ** 31 - 1)
+        const timeoutSignal =
+            timeoutMs > 0 ? AbortSignal.timeout(timeoutMs) : undefined
+        const userSignal = this.fetchOptions.signal as AbortSignal | undefined
+
+        if (timeoutSignal && userSignal) {
+            return AbortSignal.any([timeoutSignal, userSignal])
+        }
+        return userSignal || timeoutSignal
+    }
+
     _makeRequest = async (reqParams) => {
-        this._lastRequest = reqParams
+        const lastRequest = reqParams
+        let lastResponse = null
+        this._lastRequest = lastRequest
         this._lastResponse = null
 
-        const fetchImpl: FetchLike =
-            this.fetchImpl || (globalThis.fetch as FetchLike)
-
-        if (!fetchImpl) {
-            throw new Error(
-                'clientError: No fetch implementation available. Use Node.js >= 20 or pass one via config.fetch.'
-            )
-        }
-
         try {
+            const fetchImpl: FetchLike =
+                this.fetchImpl || (globalThis.fetch as FetchLike)
+
+            if (!fetchImpl) {
+                throw new Error(
+                    'No fetch implementation available. Use Node.js >= 20 or pass one via config.fetch.'
+                )
+            }
+
+            const { headers, signal, ...restOptions } = this.fetchOptions
+
             const response = await fetchImpl(this.endpoint, {
+                ...restOptions,
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    ...(headers || {}),
+                },
                 body: JSON.stringify(reqParams),
-                signal: AbortSignal.timeout(this.timeout),
-                ...this.fetchOptions,
+                signal: this._requestSignal(),
             })
+
+            const raw = await response.text()
 
             let data
             try {
-                data = await response.json()
+                data = JSON.parse(raw)
             } catch (error) {
-                throw `Cant parse the response, check the lastResponse. HTTP status: ${response.status}`
+                data = undefined
             }
 
-            this._lastResponse = data
+            lastResponse = data !== undefined ? data : raw
+            this._lastResponse = lastResponse
+
+            if (!response.ok) {
+                const err = new Error(
+                    `Request failed with status code ${response.status}`
+                )
+                ;(err as any).status = response.status
+                throw err
+            }
+
+            if (data === undefined) {
+                throw new Error(
+                    `Cant parse the response, check the lastResponse. HTTP status: ${response.status}`
+                )
+            }
 
             if (data.result) {
-                this._verifyResponse(data.result)
+                this._verifyResponse(data.result, reqParams)
                 return data.result.data
             }
 
             if (data.error) {
-                return parseError(data, this._lastRequest, this._lastResponse)
+                return parseError(data, lastRequest, lastResponse)
             }
 
-            throw 'Cant parse the response, check the lastResponse.'
+            throw new Error('Cant parse the response, check the lastResponse.')
         } catch (error) {
-            parseError(error, this._lastRequest, this._lastResponse)
+            if (
+                error &&
+                (error as any).trustlyError !== undefined &&
+                (error as any).clientError !== undefined
+            ) {
+                // already the error envelope built by parseError
+                throw error
+            }
+            parseError(error, lastRequest, lastResponse)
         }
     }
 

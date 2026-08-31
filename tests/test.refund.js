@@ -1,7 +1,7 @@
 'use strict'
 
 var util = require('util')
-var client = require('../build/main/index.js').default
+var client = require('../dist/index.js').default
 var config = require('./config')
 
 var tClientKP = client(config)

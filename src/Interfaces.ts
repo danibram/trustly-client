@@ -18,7 +18,7 @@ export type FetchLike = (
 ) => Promise<{
     ok: boolean
     status: number
-    json(): Promise<any>
+    text(): Promise<string>
 }>
 
 export type ConfigInterface = {
@@ -33,9 +33,13 @@ export type ConfigInterface = {
     specs?: {
         [key: string]: MethodInterface
     }
-    /** Request timeout in milliseconds, default 2000. */
+    /** Request timeout in milliseconds, default 2000. 0 disables it. */
     timeout?: number
-    /** Extra options merged into every fetch call, applied last so they win over the defaults. */
+    /**
+     * Extra options merged into every fetch call. `headers` are merged with
+     * the defaults, a `signal` is combined with the timeout, and
+     * `method`/`body` cannot be overridden.
+     */
     fetchOptions?: Record<string, any>
     /** Alternative fetch implementation, defaults to the global fetch. */
     fetch?: FetchLike

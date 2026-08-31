@@ -93,6 +93,18 @@ describe('constructor', () => {
         expect(client.publicKey).toBe(publicKey)
     })
 
+    it('surfaces a bad key path on first use instead of crashing at construction', async () => {
+        const client = new Client({
+            ...baseConfig,
+            privateKeyPath: '/nonexistent/key.pem',
+        })
+        // an unhandled rejection here would fail the vitest run
+        await new Promise((resolve) => setTimeout(resolve, 20))
+        await expect(client.balance({})).rejects.toMatch(
+            /Error reading privateKey/
+        )
+    })
+
     it('accepts an inline private key instead of a path', async () => {
         const { readFile } = await import('../../src/lib/utils')
         const privateKey = await readFile(MERCHANT_PRIVATE)
@@ -254,18 +266,26 @@ describe('_makeRequest over HTTP', () => {
     })
 
     const startServer = (
-        handler: (body: any) => { status?: number; payload: any }
+        handler: (body: any) => {
+            status?: number
+            payload?: any
+            rawBody?: string
+        }
     ): Promise<string> =>
         new Promise((resolve) => {
             server = createServer((req, res) => {
                 let raw = ''
                 req.on('data', (chunk) => (raw += chunk))
                 req.on('end', () => {
-                    const { status = 200, payload } = handler(JSON.parse(raw))
+                    const {
+                        status = 200,
+                        payload,
+                        rawBody,
+                    } = handler(JSON.parse(raw))
                     res.writeHead(status, {
                         'Content-Type': 'application/json',
                     })
-                    res.end(JSON.stringify(payload))
+                    res.end(rawBody ?? JSON.stringify(payload))
                 })
             })
             server.listen(0, '127.0.0.1', () => {
@@ -273,6 +293,16 @@ describe('_makeRequest over HTTP', () => {
                 resolve(`http://127.0.0.1:${port}`)
             })
         })
+
+    const signedResult = (body: any, data: any) => ({
+        signature: sign(
+            serialize(body.method, body.params.UUID, data),
+            privateKeyPem
+        ),
+        uuid: body.params.UUID,
+        method: body.method,
+        data,
+    })
 
     const makeClient = async (endpoint: string) => {
         const client = new Client(baseConfig)
@@ -337,7 +367,81 @@ describe('_makeRequest over HTTP', () => {
                 },
                 { Currency: 'EUR' }
             )
-        ).rejects.toBeTruthy()
+        ).rejects.toMatchObject({
+            trustlyError: null,
+            clientError: expect.objectContaining({
+                message: expect.stringMatching(/verify/i),
+            }),
+        })
+    })
+
+    it('rejects a signed response whose uuid does not match the request', async () => {
+        const endpoint = await startServer((body) => {
+            const data = { orderid: 'replayed' }
+            const foreignUuid = 'ffffffff-ffff-4fff-8fff-ffffffffffff'
+            return {
+                payload: {
+                    result: {
+                        signature: sign(
+                            serialize(body.method, foreignUuid, data),
+                            privateKeyPem
+                        ),
+                        uuid: foreignUuid,
+                        method: body.method,
+                        data,
+                    },
+                    version: '1.1',
+                },
+            }
+        })
+
+        const client = await makeClient(endpoint)
+        await expect(client.balance({})).rejects.toMatchObject({
+            clientError: expect.objectContaining({
+                message: expect.stringMatching(/does not match the request/),
+            }),
+        })
+    })
+
+    it('rejects non-2xx responses even when the body is a validly signed result', async () => {
+        const endpoint = await startServer((body) => ({
+            status: 500,
+            payload: {
+                result: signedResult(body, { orderid: 'from-a-500' }),
+                version: '1.1',
+            },
+        }))
+
+        const client = await makeClient(endpoint)
+        try {
+            await client.balance({})
+            expect.unreachable('a 500 must reject')
+        } catch (err: any) {
+            expect(err.clientError.message).toBe(
+                'Request failed with status code 500'
+            )
+            expect(err.clientError.status).toBe(500)
+            expect(err.lastResponse.result.data).toEqual({
+                orderid: 'from-a-500',
+            })
+        }
+    })
+
+    it('keeps the raw body in lastResponse when it is not JSON', async () => {
+        const endpoint = await startServer(() => ({
+            status: 200,
+            rawBody: '<html>gateway blew up</html>',
+        }))
+
+        const client = await makeClient(endpoint)
+        try {
+            await client.balance({})
+            expect.unreachable('a non-JSON body must reject')
+        } catch (err: any) {
+            expect(err.clientError.message).toContain('Cant parse the response')
+            expect(err.lastResponse).toBe('<html>gateway blew up</html>')
+            expect(client._lastResponse).toBe('<html>gateway blew up</html>')
+        }
     })
 
     it('rejects with the trustly error payload on JSON-RPC errors', async () => {
@@ -373,15 +477,63 @@ describe('_makeRequest over HTTP', () => {
             )
             expect.unreachable('deposit must reject on trustly error')
         } catch (err: any) {
-            const flat = JSON.stringify(err)
-            expect(flat).toContain('ERROR_UNABLE_TO_VERIFY_RSA_SIGNATURE')
-            expect(flat).toContain('616')
+            expect(err.trustlyError).toEqual({
+                method: 'Deposit',
+                uuid: 'uuid-err',
+                message: 'ERROR_UNABLE_TO_VERIFY_RSA_SIGNATURE',
+                code: 616,
+            })
+            expect(err.clientError).toBeNull()
+            expect(err.lastResponse).toEqual(trustlyErrorBody)
         }
+    })
+
+    it('redacts the password in the error envelope', async () => {
+        const endpoint = await startServer(() => ({
+            status: 500,
+            payload: { boom: true },
+        }))
+
+        const client = await makeClient(endpoint)
+        try {
+            await client.balance({})
+            expect.unreachable('a 500 must reject')
+        } catch (err: any) {
+            expect(err.lastRequest.params.Data.Password).toBe('[redacted]')
+            expect(JSON.stringify(err)).not.toContain('merchant_password')
+        }
+        // the redaction copies; the live request object is untouched
+        expect(client._lastRequest.params.Data.Password).toBe(
+            'merchant_password'
+        )
     })
 
     it('rejects when the endpoint is unreachable', async () => {
         const client = await makeClient('http://127.0.0.1:1')
-        await expect(client.balance({})).rejects.toBeTruthy()
+        try {
+            await client.balance({})
+            expect.unreachable('an unreachable endpoint must reject')
+        } catch (err: any) {
+            expect(err.trustlyError).toBeNull()
+            expect(err.clientError).toBeInstanceOf(Error)
+        }
+    })
+
+    it('rejects with the error envelope when no fetch implementation exists', async () => {
+        const client = new Client(baseConfig)
+        await client.ready
+
+        const originalFetch = globalThis.fetch
+        // @ts-expect-error simulate a runtime without global fetch
+        delete globalThis.fetch
+        try {
+            await client.balance({})
+            expect.unreachable('must reject without a fetch')
+        } catch (err: any) {
+            expect(err.clientError.message).toMatch(/No fetch implementation/)
+        } finally {
+            globalThis.fetch = originalFetch
+        }
     })
 
     it('rejects with a timeout error when the server is too slow', async () => {
@@ -405,40 +557,90 @@ describe('_makeRequest over HTTP', () => {
         expect(Date.now() - start).toBeLessThan(3000)
     })
 
-    it('sends fetchOptions on every request', async () => {
-        let seenAuth: string | undefined
-        const endpoint = await startServer((body) => {
-            const data = { ok: '1' }
-            const result = {
-                signature: sign(
-                    serialize(body.method, body.params.UUID, data),
-                    privateKeyPem
-                ),
-                uuid: body.params.UUID,
-                method: body.method,
-                data,
-            }
-            return { payload: { result, version: '1.1' } }
-        })
+    it('merges fetchOptions.headers with the defaults instead of replacing them', async () => {
+        let seenCustom: string | undefined
+        let seenContentType: string | undefined
+        const endpoint = await startServer((body) => ({
+            payload: {
+                result: signedResult(body, { ok: '1' }),
+                version: '1.1',
+            },
+        }))
 
         server!.prependListener('request', (req) => {
-            seenAuth = req.headers['x-custom'] as string
+            seenCustom = req.headers['x-custom'] as string
+            seenContentType = req.headers['content-type'] as string
         })
 
         const client = new Client({
             ...baseConfig,
-            fetchOptions: {
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'X-Custom': 'injected',
-                },
-            },
+            fetchOptions: { headers: { 'X-Custom': 'injected' } },
         })
         await client.ready
         client.endpoint = endpoint
 
         await client.balance({})
-        expect(seenAuth).toBe('injected')
+        expect(seenCustom).toBe('injected')
+        expect(seenContentType).toContain('application/json')
+    })
+
+    it('keeps the timeout active when the user passes their own signal', async () => {
+        const endpoint = await new Promise<string>((resolve) => {
+            server = createServer((_req, res) => {
+                setTimeout(() => res.end('{}'), 5000).unref()
+            })
+            server.listen(0, '127.0.0.1', () => {
+                const { port } = server!.address() as AddressInfo
+                resolve(`http://127.0.0.1:${port}`)
+            })
+        })
+
+        const userController = new AbortController()
+        const client = new Client({
+            ...baseConfig,
+            timeout: 100,
+            fetchOptions: { signal: userController.signal },
+        })
+        await client.ready
+        client.endpoint = endpoint
+
+        const start = Date.now()
+        await expect(client.balance({})).rejects.toBeTruthy()
+        expect(Date.now() - start).toBeLessThan(3000)
+    })
+
+    it('disables the timeout when timeout is 0', async () => {
+        const endpoint = await new Promise<string>((resolve) => {
+            server = createServer((req, res) => {
+                let raw = ''
+                req.on('data', (c) => (raw += c))
+                req.on('end', () => {
+                    const body = JSON.parse(raw)
+                    setTimeout(() => {
+                        res.writeHead(200, {
+                            'Content-Type': 'application/json',
+                        })
+                        res.end(
+                            JSON.stringify({
+                                result: signedResult(body, { slow: '1' }),
+                                version: '1.1',
+                            })
+                        )
+                    }, 300)
+                })
+            })
+            server.listen(0, '127.0.0.1', () => {
+                const { port } = server!.address() as AddressInfo
+                resolve(`http://127.0.0.1:${port}`)
+            })
+        })
+
+        const client = new Client({ ...baseConfig, timeout: 0 })
+        await client.ready
+        client.endpoint = endpoint
+
+        expect(client.timeout).toBe(0)
+        await expect(client.balance({})).resolves.toEqual({ slow: '1' })
     })
 })
 
@@ -462,7 +664,7 @@ describe('custom fetch injection', () => {
             return {
                 ok: true,
                 status: 200,
-                json: async () => ({ result, version: '1.1' }),
+                text: async () => JSON.stringify({ result, version: '1.1' }),
             }
         }
 

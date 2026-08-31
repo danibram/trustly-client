@@ -1,8 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const util = require('util')
-const app = express()
-const client = require('../build/main/index.js').default
+const client = require('../../dist/index.js').default
 
 const app = express()
 

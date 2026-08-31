@@ -23,18 +23,31 @@ export const verify = function (data, signature, key) {
     return verifier.verify(key, signature, 'base64')
 }
 
+// the error envelope is meant to be logged, so it must not carry credentials
+const redactCredentials = (req) => {
+    if (!req || !req.params || !req.params.Data) {
+        return req
+    }
+    const Data = { ...req.params.Data }
+    if (Data.Password !== undefined) {
+        Data.Password = '[redacted]'
+    }
+    return { ...req, params: { ...req.params, Data } }
+}
+
 export const parseError = (err, lastRequest, lastResponse) => {
     let error = {
-        lastRequest: lastRequest,
+        lastRequest: redactCredentials(lastRequest),
         lastResponse: lastResponse,
         trustlyError: null,
         clientError: null,
     }
 
     if (err && err.error) {
+        const details = err.error.error || {}
         let tError = {
-            method: err.error.error.method ? err.error.error.method : null,
-            uuid: err.error.error.uuid ? err.error.error.uuid : null,
+            method: details.method ? details.method : null,
+            uuid: details.uuid ? details.uuid : null,
             message: err.error.message ? err.error.message : null,
             code: err.error.code ? err.error.code : null,
         }

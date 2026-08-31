@@ -17,12 +17,17 @@ Install the module with: `npm install trustly-client` or `yarn add trustly-clien
 
 ### Migrating from v3
 
-- `axiosRequestConfig` is gone (axios was removed). Use `timeout`, `fetchOptions` or inject your own `fetch` (see below). Requests, signing and responses behave exactly as in v3.
-- If you used it for a timeout: pass `timeout: <ms>` (the default is still 2000).
-- If you used it for headers: pass `fetchOptions: { headers: { ... } }`.
-- If you used it for a proxy or a custom agent: pass an undici dispatcher via `fetchOptions`, or inject a whole `fetch` implementation via the `fetch` option.
-- `utils.root` was removed. Trustly's public keys are now embedded in the library (also shipped as `.pem` files in `keys/`) and exported as `TRUSTLY_PROD_PUBLIC_KEY` / `TRUSTLY_TEST_PUBLIC_KEY`.
-- The `endpoint` config option now works (it was ignored in v3).
+Request composition, signing and response verification are unchanged. What changed:
+
+- `axiosRequestConfig` is gone (axios was removed). Use `timeout`, `fetchOptions` or inject your own `fetch` (see below).
+  - Timeout: pass `timeout: <ms>` (the default is still 2000, and `0` disables it).
+  - Headers: pass `fetchOptions: { headers: { ... } }`. They are merged with the defaults, so `Content-Type` is preserved unless you override it explicitly.
+  - Proxy or custom agent: pass an undici dispatcher via `fetchOptions`, or inject a whole `fetch` implementation via the `fetch` option.
+- The `endpoint` config option is now honored. v3 accepted it in the types but ignored it, so check your configs: a stale `endpoint` value that did nothing in v3 will receive your API credentials in v4. Remember `environment` still controls which Trustly public key verifies responses.
+- Transport errors changed identity (`clientError` in the error envelope): network failures are a `TypeError('fetch failed')` with the cause in `error.cause` instead of an axios error with `code: 'ECONNRESET'`, and timeouts are a `DOMException` named `TimeoutError` instead of `code: 'ECONNABORTED'`. Non-2xx responses still reject with `Request failed with status code N` (plus a `status` property).
+- Trustly JSON-RPC errors now land directly in `err.trustlyError`. In v3 a wrapping bug buried them in `err.clientError.trustlyError`; if your handler reads that nested path, flatten it.
+- The password is redacted in `err.lastRequest` (errors are meant to be logged).
+- `utils.root` was removed. Trustly's public keys are now embedded in the library, exported as `TRUSTLY_PROD_PUBLIC_KEY` / `TRUSTLY_TEST_PUBLIC_KEY`, and also shipped as `.pem` files importable via `trustly-client/keys/trustly.com.public.pem`.
 
 ### Usage
 
@@ -108,8 +113,8 @@ This configuration is an object and this is the structure:
 -   [optional] 'publicKeyPath' or 'publicKey': Path to a public key, or the key itself as a string (for the general cases you don't need it, the trustly public keys are embedded in the library)
 -   [optional] 'endpoint': Overrides the URL the client calls. By default is selected depending of the environment.
 -   [optional] 'environment': By default is "development", and it does the http calls to trustly development environment (`https://test.trustly.com/api/1`), if you pass production it turns to `https://trustly.com/api/1`, so remember to change that variable when you go to production
--   [optional] 'timeout': Request timeout in milliseconds, default 2000
--   [optional] 'fetchOptions': Extra options merged into every fetch call (headers, an undici dispatcher for proxies, etc.). Applied last, so they win over the defaults.
+-   [optional] 'timeout': Request timeout in milliseconds, default 2000. Pass 0 to disable it.
+-   [optional] 'fetchOptions': Extra options merged into every fetch call (headers, an undici dispatcher for proxies, etc.). `headers` are merged with the defaults, a `signal` is combined with the timeout (whichever aborts first wins), and `method`/`body` cannot be overridden.
 -   [optional] 'fetch': An alternative fetch implementation. By default the global fetch of Node.js is used. Anything with the same call shape works: undici's fetch, node-fetch, a wrapper adding interceptors, or a mock in tests.
 
 ```javascript
@@ -179,7 +184,7 @@ console.log('- Notification is comming. √')
 tClient
     .verifyAndParseNotification(req.body)
     .then(function (notification) {
-        return composeNotificationResponse(notification, {
+        return tClient.composeNotificationResponse(notification, {
             status: 'OK',
             ...aditionalData,
         })
@@ -214,9 +219,9 @@ var error = {
 }
 ```
 
-It seems to long but sometimes you must understand the request and the response.
+It seems to long but sometimes you must understand the request and the response. The `Password` field inside `lastRequest` is redacted so the envelope is safe to log.
 
-If _clientError_ is filled, means that the error not comes from trustly.
+If _clientError_ is filled, means that the error not comes from trustly: a network failure (`TypeError('fetch failed')`, cause in `.cause`), a timeout (`DOMException` named `TimeoutError`), a non-2xx HTTP status (`Error` with a `status` property), or a signature verification failure.
 If _trustlyError_ is filled, it will catch all information about the trustly error in this format (Example):
 
 ```javascript
