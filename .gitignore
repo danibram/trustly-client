@@ -8,3 +8,4 @@ tests/privateKey.pem
 
 tests/test_keys
 tests/config.js
+dist/

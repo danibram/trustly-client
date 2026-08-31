@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.3.0"></a>
+
+# [3.3.0](https://github.com/danibram/trustly-client/compare/v3.2.1...v3.3.0) (2026-08-31)
+
+Maintenance release for older Node.js runtimes (>= 14.17). The public API is unchanged. For the fetch-based rewrite with zero runtime dependencies, see 4.x (requires Node >= 20).
+
+### Security / dependencies
+
+-   axios upgraded from 0.21.1 to 0.33.0 (the maintained 0.x line, same API, patched advisories). `axiosRequestConfig` still works.
+-   `uuid` dependency removed. UUID v4 comes from the native `crypto.randomUUID()` (Node >= 14.17), which also drops the uuid buffer-bounds advisory (GHSA-w5hq-g745-h8pq, never reachable here since only v4 was used).
+-   No production dependencies with known advisories (`npm audit --omit=dev`: 0 vulnerabilities).
+
+### Tooling
+
+-   Dev toolchain modernized so the package builds and tests on current Node: TypeScript 5, rimraf, and a vitest suite (20 tests: serialization vectors, sign/verify, notifications, and the axios HTTP flow against a local server).
+-   GitHub Actions CI: full pipeline on Node 20, plus a runtime smoke test of the built artifact on Node 14.17 / 16 / 18 / 20 / 22.
+-   Requires Node >= 14.17 (`engines`).
+
 <a name="3.2.1"></a>
 
 # [3.2.1](https://github.com/danibram/trustly-client/compare/v3.2.0...v3.2.1) (2021-07-23)

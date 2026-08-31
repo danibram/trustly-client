@@ -1,11 +1,11 @@
 import { AxiosRequestConfig } from 'axios';
-export declare type MethodInterface = {
+export type MethodInterface = {
     method: string;
     dataFields: string[];
     attributesFields: string[];
     requiredFields: string[];
 };
-export declare type ConfigInterface = {
+export type ConfigInterface = {
     username: string;
     password: string;
     privateKeyPath?: string;

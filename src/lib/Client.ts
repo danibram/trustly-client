@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'crypto'
 import { ConfigInterface } from '../Interfaces'
 import {
     accountPayout,
@@ -83,7 +83,7 @@ export class Client {
             version: '1.1',
         }
 
-        let UUID = uuidv4()
+        let UUID = randomUUID()
 
         let Data = Object.assign({}, data, {
             Attributes: attributes ? attributes : null,
