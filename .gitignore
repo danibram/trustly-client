@@ -9,3 +9,4 @@ tests/privateKey.pem
 tests/test_keys
 tests/config.js
 dist/
+package-lock.json
