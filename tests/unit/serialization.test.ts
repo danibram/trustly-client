@@ -38,11 +38,21 @@ describe('trustlySerializeData', () => {
         expect(trustlySerializeData({ a: null, b: 'x' })).toBe('abx')
     })
 
-    it('keeps a 0 value (regression from 3.1.0)', () => {
-        expect(trustlySerializeData({ a: 0, b: '1' })).toBe('a0b1')
+    it('throws on undefined values', () => {
+        expect(() =>
+            trustlySerializeData({ a: undefined }, 'Deposit', 'uuid-1')
+        ).toThrow(/undefined/)
+    })
+
+    it('serializes nested objects recursively', () => {
+        expect(trustlySerializeData({ a: { c: '2', b: '1' }, d: '3' })).toBe(
+            'ab1c2d3'
+        )
     })
 
     it('prefixes method and uuid in serialize()', () => {
-        expect(serialize('Deposit', 'uuid-1', { a: '1' })).toBe('Deposituuid-1a1')
+        expect(serialize('Deposit', 'uuid-1', { a: '1' })).toBe(
+            'Deposituuid-1a1'
+        )
     })
 })

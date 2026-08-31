@@ -2,40 +2,27 @@ name: CI
 
 on:
   push:
-    branches: [v3-maintenance]
+    branches: [master, main]
   pull_request:
-    branches: [v3-maintenance, master]
 
 jobs:
-  # Full pipeline on a modern Node: the dev toolchain (vitest, tsc) needs it.
   test:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm install --no-audit --no-fund
-      - run: npm run typecheck
-      - run: npx vitest run tests/unit
-      - run: npm run build
-
-  # Prove the built artifact runs on the oldest supported Node versions.
-  # OPENSSL_CONF unsets the runner's OpenSSL 3 config, which older Node
-  # builds (OpenSSL 1.1.1) cannot load (DSO / unknown-module errors).
-  compat:
-    runs-on: ubuntu-latest
-    env:
-      OPENSSL_CONF: /dev/null
     strategy:
-      fail-fast: false
       matrix:
-        node-version: ['14.17', '16', '18', '20', '22']
+        node-version: [20, 22, 24]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      # runtime deps only (axios, tslib); skip the dev toolchain and prepare
-      - run: npm install --omit=dev --ignore-scripts --no-audit --no-fund
-      - run: node tests/smoke.js
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run format:check
+      - run: npm test
+      - run: npm run build
+      - name: Smoke test built output (CJS + ESM)
+        run: |
+          node -e "const l = require('./dist/index.js'); if (typeof l.default !== 'function') process.exit(1)"
+          node --input-type=module -e "import l from './dist/index.mjs'; if (typeof l !== 'function') process.exit(1)"

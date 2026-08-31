@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="4.0.0"></a>
+
+# [4.0.0](https://github.com/danibram/trustly-client/compare/v3.2.1...v4.0.0) (2026-08-31)
+
+Modernization release, closes [#43](https://github.com/danibram/trustly-client/issues/43). Zero runtime dependencies.
+
+### Breaking changes
+
+-   Requires Node.js >= 20.
+-   axios removed, requests now use the native `fetch`. The `axiosRequestConfig` config option is gone; use `timeout` (ms, default still 2000, 0 disables it), `fetchOptions` (headers merged with the defaults, signal combined with the timeout, method/body protected) or `fetch` (inject your own implementation: undici with a proxy, node-fetch, mocks...).
+-   `endpoint` config option is honored. v3 accepted it in the types but ignored it, so audit your configs before upgrading: a stale value will now receive your credentials.
+-   Transport error identity changed inside `clientError`: network failures are `TypeError('fetch failed')` (cause in `.cause`) instead of axios errors with `code`, timeouts are a `DOMException` named `TimeoutError` instead of `code: 'ECONNABORTED'`. Non-2xx still rejects with `Request failed with status code N` plus a `status` property.
+-   Trustly JSON-RPC errors land directly in `err.trustlyError` as the README always documented. A v3 bug double-wrapped them into `err.clientError.trustlyError`.
+-   `uuid` dependency removed, UUIDs come from `crypto.randomUUID()`.
+-   `utils.root` removed. Trustly's public keys are embedded and exported as `TRUSTLY_PROD_PUBLIC_KEY` / `TRUSTLY_TEST_PUBLIC_KEY` (the `.pem` files are shipped and importable via `trustly-client/keys/*`).
+
+### Features
+
+-   New `publicKey` config option to pass the key inline, mirroring `privateKey`.
+-   Dual CJS + ESM build with type declarations (`exports` map), built with tsup.
+-   Unit test suite (vitest, 50 tests) covering serialization, signing, notifications, the HTTP flow, error shapes and the embedded keys; CI on GitHub Actions (Node 20/22/24).
+
+### Fixes and hardening
+
+-   Responses are now bound to their request: a validly signed result whose `uuid` or `method` does not match the outgoing request is rejected.
+-   Non-2xx responses reject even if the body carries a signed result (v3 semantics restored; the fetch rewrite initially dropped this).
+-   `lastResponse` keeps the raw body when it is not JSON (WAF pages, HTML 502s).
+-   The API password is redacted in the error envelope's `lastRequest`.
+-   Concurrent requests no longer cross-contaminate each other's error reports.
+-   A wrong key path no longer crashes the process at construction; it surfaces on the first call.
+-   `parseError` no longer crashes on Trustly error bodies without nested details.
+
 <a name="3.3.0"></a>
 
 # [3.3.0](https://github.com/danibram/trustly-client/compare/v3.2.1...v3.3.0) (2026-08-31)

@@ -1,7 +1,7 @@
 import { ConfigInterface } from './Interfaces'
 import { Client } from './lib/Client'
 import { serialize, trustlySerializeData } from './lib/trustlySerializeData'
-import { readFile, root, sign, verify } from './lib/utils'
+import { readFile, sign, verify } from './lib/utils'
 import {
     approveWithdrawal,
     charge,
@@ -13,6 +13,8 @@ import {
 } from './specs'
 
 export { Client } from './lib/Client'
+export { TRUSTLY_PROD_PUBLIC_KEY, TRUSTLY_TEST_PUBLIC_KEY } from './keys'
+export { ConfigInterface, FetchLike, MethodInterface } from './Interfaces'
 
 export const TrustlyClient = Client
 export const constants = {
@@ -25,7 +27,6 @@ export const constants = {
     charge,
 }
 export const utils = {
-    root,
     readFile,
 }
 export const helpers = {

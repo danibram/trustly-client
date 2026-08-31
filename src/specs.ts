@@ -31,16 +31,16 @@ export const deposit: MethodInterface = {
         'RequestDirectDebitMandate',
         'ChargeAccountID',
         'QuickDeposit',
-        'IntegrationModule' // Old?
+        'IntegrationModule', // Old?
     ],
-    requiredFields: ['NotificationURL', 'EndUserID', 'MessageID', 'Currency']
+    requiredFields: ['NotificationURL', 'EndUserID', 'MessageID', 'Currency'],
 }
 
 export const refund: MethodInterface = {
     method: 'Refund',
     dataFields: ['OrderID', 'Amount', 'Currency'],
     attributesFields: [],
-    requiredFields: ['OrderID', 'Amount', 'Currency']
+    requiredFields: ['OrderID', 'Amount', 'Currency'],
 }
 export const accountPayout: MethodInterface = {
     method: 'AccountPayout',
@@ -50,7 +50,7 @@ export const accountPayout: MethodInterface = {
         'EndUserID',
         'MessageID',
         'Amount',
-        'Currency'
+        'Currency',
     ],
     attributesFields: ['SenderInformation'],
     requiredFields: [
@@ -59,8 +59,8 @@ export const accountPayout: MethodInterface = {
         'EndUserID',
         'MessageID',
         'Amount',
-        'Currency'
-    ]
+        'Currency',
+    ],
 }
 export const selectAccount: MethodInterface = {
     // Old method?
@@ -81,9 +81,9 @@ export const selectAccount: MethodInterface = {
         'URLTarget',
         'RequestDirectDebitMandate',
         'Email',
-        'UnchangeableNationalIdentificationNumber'
+        'UnchangeableNationalIdentificationNumber',
     ],
-    requiredFields: ['NotificationURL', 'EndUserID', 'MessageID']
+    requiredFields: ['NotificationURL', 'EndUserID', 'MessageID'],
 }
 
 export const charge: MethodInterface = {
@@ -95,7 +95,7 @@ export const charge: MethodInterface = {
         'EndUserID',
         'MessageID',
         'Amount',
-        'Currency'
+        'Currency',
     ],
     attributesFields: ['ShopperStatement', 'Email'],
     requiredFields: [
@@ -104,8 +104,8 @@ export const charge: MethodInterface = {
         'EndUserID',
         'MessageID',
         'Amount',
-        'Currency'
-    ]
+        'Currency',
+    ],
 }
 export const withdraw: MethodInterface = {
     method: 'Withdraw',
@@ -137,7 +137,7 @@ export const withdraw: MethodInterface = {
         'AddressLine2',
         'Address',
         'ShopperStatement', // Old
-        'IntegrationModule' // Old
+        'IntegrationModule', // Old
     ],
     requiredFields: [
         'NotificationURL',
@@ -147,27 +147,27 @@ export const withdraw: MethodInterface = {
         'Firstname',
         'Lastname',
         'Email',
-        'DateOfBirth'
-    ]
+        'DateOfBirth',
+    ],
 }
 
 export const approveWithdrawal: MethodInterface = {
     method: 'ApproveWithdrawal',
     dataFields: ['OrderID'],
     attributesFields: [],
-    requiredFields: ['OrderID']
+    requiredFields: ['OrderID'],
 }
 
 export const denyWithdrawal: MethodInterface = {
     method: 'DenyWithdrawal',
     dataFields: ['OrderID'],
     attributesFields: [],
-    requiredFields: ['OrderID']
+    requiredFields: ['OrderID'],
 }
 
 export const balance: MethodInterface = {
     method: 'Balance',
     dataFields: [], // TODO: The response will be an array
     attributesFields: [],
-    requiredFields: []
+    requiredFields: [],
 }

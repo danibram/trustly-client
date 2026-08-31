@@ -1,6 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios'
 import { randomUUID } from 'crypto'
-import { ConfigInterface } from '../Interfaces'
+import { ConfigInterface, FetchLike } from '../Interfaces'
+import { TRUSTLY_PROD_PUBLIC_KEY, TRUSTLY_TEST_PUBLIC_KEY } from '../keys'
 import {
     accountPayout,
     approveWithdrawal,
@@ -13,7 +13,7 @@ import {
     withdraw,
 } from '../specs'
 import { serialize } from './trustlySerializeData'
-import { parseError, readFile, root, sign, verify } from './utils'
+import { parseError, readFile, sign, verify } from './utils'
 
 export class Client {
     endpoint: string = 'https://test.trustly.com/api/1'
@@ -21,10 +21,12 @@ export class Client {
     username: string = ''
     password: string = ''
 
-    axiosRequestConfig: AxiosRequestConfig | {}
+    timeout: number
+    fetchOptions: Record<string, any>
+    fetchImpl: FetchLike | undefined
 
     privateKeyPath: string | undefined
-    publicKeyPath: string
+    publicKeyPath: string | undefined
 
     privateKey: string | undefined
     publicKey: string
@@ -40,15 +42,18 @@ export class Client {
             ['production', 'prod', 'p'].indexOf(config.environment) > -1
 
         this.publicKeyPath = config.publicKeyPath
-            ? config.publicKeyPath
-            : isProd
-            ? root('keys', 'trustly.com.public.pem')
-            : root('keys', 'test.trustly.com.public.pem')
 
-        this.endpoint = isProd
-            ? 'https://trustly.com/api/1'
-            : 'https://test.trustly.com/api/1'
+        this.endpoint = config.endpoint
+            ? config.endpoint
+            : isProd
+              ? 'https://trustly.com/api/1'
+              : 'https://test.trustly.com/api/1'
         this.environment = isProd ? 'production' : 'development'
+        this.publicKey = config.publicKey
+            ? config.publicKey
+            : isProd
+              ? TRUSTLY_PROD_PUBLIC_KEY
+              : TRUSTLY_TEST_PUBLIC_KEY
 
         if (!config.username) {
             throw `No username provided, please provide one.`
@@ -66,8 +71,13 @@ export class Client {
         this.password = config.password
         this.privateKeyPath = config.privateKeyPath
         this.privateKey = config.privateKey
-        this.axiosRequestConfig = config.axiosRequestConfig || {}
+        this.timeout = config.timeout ?? 2000
+        this.fetchOptions = config.fetchOptions || {}
+        this.fetchImpl = config.fetch
         this.ready = this._init()
+        // mark the rejection as handled so a bad key path surfaces on the
+        // first API call instead of crashing the process at construction
+        this.ready.catch(() => undefined)
     }
 
     public _createMethod = (method) => async (params, attributes) => {
@@ -100,18 +110,27 @@ export class Client {
         return req
     }
 
-    _verifyResponse = function (res) {
+    _verifyResponse = (res, request?) => {
         let data = serialize(res.method, res.uuid, res.data)
         let v = verify(data, res.signature, this.publicKey)
         if (!v) {
             throw new Error('clientError: Cant verify the response.')
         }
+        if (
+            request &&
+            request.params &&
+            (res.uuid !== request.params.UUID || res.method !== request.method)
+        ) {
+            throw new Error(
+                'clientError: Response does not match the request (uuid or method mismatch).'
+            )
+        }
     }
 
-    _prepareNotificationResponse = function (
+    _prepareNotificationResponse = (
         notification,
         status: 'OK' | 'FAILED' = 'OK'
-    ) {
+    ) => {
         let req = {
             result: {
                 signature: '',
@@ -134,7 +153,7 @@ export class Client {
         return req
     }
 
-    composeNotificationResponse = function (notification, data = {}) {
+    composeNotificationResponse = (notification, data = {}) => {
         let req = {
             result: {
                 signature: '',
@@ -205,9 +224,8 @@ export class Client {
         await this.ready
 
         try {
-            let parsedNotification = await this.verifyAndParseNotification(
-                notification
-            )
+            let parsedNotification =
+                await this.verifyAndParseNotification(notification)
 
             return this.composeNotificationResponse(parsedNotification, {
                 status,
@@ -217,39 +235,94 @@ export class Client {
         }
     }
 
-    _makeRequest = (reqParams) => {
-        this._lastRequest = reqParams
+    _requestSignal = (): AbortSignal | undefined => {
+        const timeoutMs = Math.min(this.timeout, 2 ** 31 - 1)
+        const timeoutSignal =
+            timeoutMs > 0 ? AbortSignal.timeout(timeoutMs) : undefined
+        const userSignal = this.fetchOptions.signal as AbortSignal | undefined
+
+        if (timeoutSignal && userSignal) {
+            return AbortSignal.any([timeoutSignal, userSignal])
+        }
+        return userSignal || timeoutSignal
+    }
+
+    _makeRequest = async (reqParams) => {
+        const lastRequest = reqParams
+        let lastResponse = null
+        this._lastRequest = lastRequest
         this._lastResponse = null
 
-        return axios({
-            method: 'post',
-            url: this.endpoint,
-            headers: { 'Content-Type': 'application/json; charset=utf-8' },
-            data: reqParams,
-            timeout: 2000,
-            ...this.axiosRequestConfig,
-        })
-            .then(({ data }) => {
-                this._lastResponse = data
+        try {
+            const fetchImpl: FetchLike =
+                this.fetchImpl || (globalThis.fetch as FetchLike)
 
-                if (data.result) {
-                    this._verifyResponse(data.result)
-                    return data.result.data
-                }
+            if (!fetchImpl) {
+                throw new Error(
+                    'No fetch implementation available. Use Node.js >= 20 or pass one via config.fetch.'
+                )
+            }
 
-                if (data.error) {
-                    return parseError(
-                        data,
-                        this._lastRequest,
-                        this._lastResponse
-                    )
-                }
+            const { headers, signal, ...restOptions } = this.fetchOptions
 
-                throw 'Cant parse the response, check the lastResponse.'
+            const response = await fetchImpl(this.endpoint, {
+                ...restOptions,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    ...(headers || {}),
+                },
+                body: JSON.stringify(reqParams),
+                signal: this._requestSignal(),
             })
-            .catch((error) => {
-                parseError(error, this._lastRequest, this._lastResponse)
-            })
+
+            const raw = await response.text()
+
+            let data
+            try {
+                data = JSON.parse(raw)
+            } catch (error) {
+                data = undefined
+            }
+
+            lastResponse = data !== undefined ? data : raw
+            this._lastResponse = lastResponse
+
+            if (!response.ok) {
+                const err = new Error(
+                    `Request failed with status code ${response.status}`
+                )
+                ;(err as any).status = response.status
+                throw err
+            }
+
+            if (data === undefined) {
+                throw new Error(
+                    `Cant parse the response, check the lastResponse. HTTP status: ${response.status}`
+                )
+            }
+
+            if (data.result) {
+                this._verifyResponse(data.result, reqParams)
+                return data.result.data
+            }
+
+            if (data.error) {
+                return parseError(data, lastRequest, lastResponse)
+            }
+
+            throw new Error('Cant parse the response, check the lastResponse.')
+        } catch (error) {
+            if (
+                error &&
+                (error as any).trustlyError !== undefined &&
+                (error as any).clientError !== undefined
+            ) {
+                // already the error envelope built by parseError
+                throw error
+            }
+            parseError(error, lastRequest, lastResponse)
+        }
     }
 
     deposit = (data, attributes?) =>
@@ -274,10 +347,12 @@ export class Client {
         this._createMethod(method)(params, attributes)
 
     private _init = async (): Promise<void> => {
-        try {
-            this.publicKey = await readFile(this.publicKeyPath)
-        } catch (err) {
-            throw `Error reading publickey. ${err}`
+        if (this.publicKeyPath) {
+            try {
+                this.publicKey = await readFile(this.publicKeyPath)
+            } catch (err) {
+                throw `Error reading publickey. ${err}`
+            }
         }
 
         if (this.privateKeyPath) {
